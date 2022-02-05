@@ -6,6 +6,7 @@ import json from '@rollup/plugin-json'
 import url from '@rollup/plugin-url'
 import svgr from '@svgr/rollup'
 import nodeResolve from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
 import babel, { RollupBabelInputPluginOptions } from '@rollup/plugin-babel'
 import getBabelConfig from '@/utils/getBabelConfig'
 
@@ -74,6 +75,12 @@ export default function (opts: IGetRollupConfigOpts): InternalRollupConfig {
             // ref: https://github.com/rollup/rollup-plugin-babel#usage
             extensions,
           }),
+      replace({
+        values: {
+          'process.env.NODE_ENV': JSON.stringify('production'),
+        },
+        preventAssignment: true,
+      }),
     ]
   }
 
