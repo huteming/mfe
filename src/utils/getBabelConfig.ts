@@ -46,9 +46,6 @@ export default function (opts: IGetBabelConfigOpts) {
           // version: require('@babel/runtime/package.json').version,
         },
       ],
-      ...(process.env.COVERAGE
-        ? [require.resolve('babel-plugin-istanbul')]
-        : []),
     ],
   }
 }
