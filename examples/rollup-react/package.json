@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "node ../../bin/mfe.js build"
+  },
+  "dependencies": {
+    "@types/react": "16.x",
+    "react": "16.x"
+  }
+}
