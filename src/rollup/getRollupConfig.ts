@@ -7,6 +7,9 @@ import url from '@rollup/plugin-url'
 import svgr from '@svgr/rollup'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
+import postcss from 'rollup-plugin-postcss'
+import NpmImport from 'less-plugin-npm-import'
+import autoprefixer from 'autoprefixer'
 import babel, { RollupBabelInputPluginOptions } from '@rollup/plugin-babel'
 import getBabelConfig from '@/utils/getBabelConfig'
 
@@ -49,6 +52,26 @@ export default function (opts: IGetRollupConfigOpts): InternalRollupConfig {
     return [
       url(),
       svgr(),
+      postcss({
+        extract: false,
+        inject: true,
+        modules: false,
+        minimize: false,
+        use: {
+          less: {
+            plugins: [new NpmImport({ prefix: '~' })],
+            javascriptEnabled: true,
+          },
+          sass: {},
+          stylus: false,
+        },
+        plugins: [
+          autoprefixer({
+            // https://github.com/postcss/autoprefixer/issues/776
+            remove: false,
+          }),
+        ],
+      }),
       nodeResolve({
         mainFields: ['module', 'jsnext:main', 'main'],
         extensions,
