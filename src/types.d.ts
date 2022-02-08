@@ -11,37 +11,51 @@ export interface UserConfig {
   rollup?: UserRollupConfig
 }
 
-export interface UserBabelConfig {
-  output: IBabelOutputOptions[]
-}
-
-export interface UserRollupConfig extends RollupOptions {
-  input: string[]
-  output: IOutputOptions[]
-}
-
-// ------------ 内部转化后配置 ------------
-
-export interface InternalBabelConfig {
-  output: IBabelOutputOptions
-}
-
-// 在内部将 input/output 转化为 1 对 1，类型在这里共享
-export interface InternalRollupConfig extends RollupOptions {
-  input: string
-  output: IOutputOptions
-}
-
-// ------------ 单个配置对象 ------------
-
-interface IOutputOptions extends OutputOptions {
+interface RollupOutputOptions extends OutputOptions {
   file: string
   format: ModuleFormat
-  target?: 'node' | 'browser'
+  target: 'node' | 'browser'
 }
 
 interface IBabelOutputOptions {
   dir: string
-  format: 'esm' | 'cjs'
+  format: ModuleFormat
   target: 'node' | 'browser'
 }
+
+export interface UserBabelConfig {
+  output: IBabelOutputOptions[]
+  plugins?: any[]
+}
+
+export interface UserRollupConfig extends RollupOptions {
+  input: string[]
+  output: RollupOutputOptions[]
+  plugins?: any[]
+  extraBabelPlugins?: any[]
+}
+
+// ------------ 转换后的用户对象 ------------
+
+export interface TransformedBabelConfig {
+  output: IBabelOutputOptions
+  plugins: any[]
+}
+
+// 在内部将 input/output 转化为 1 对 1，类型在这里共享
+export interface TransformedRollupConfig extends RollupOptions {
+  input: string
+  output: RollupOutputOptions
+  plugins: any[]
+  extraBabelPlugins: any[]
+}
+
+// ------------ 用于构建的配置对象 ------------
+
+export interface BuildRollupConfig extends RollupOptions {
+  input: string
+  output: BuildRollupConfigOutput
+  plugins: any[]
+}
+
+export type BuildRollupConfigOutput = Omit<RollupOutputOptions, 'target'>

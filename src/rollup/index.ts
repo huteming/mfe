@@ -1,6 +1,6 @@
 import { rollup } from 'rollup'
 import getRollupConfig from './getRollupConfig'
-import { InternalRollupConfig, UserRollupConfig } from '../types'
+import { TransformedRollupConfig, UserRollupConfig } from '../types'
 import { join, extname, relative } from 'path'
 import produce from 'immer'
 
@@ -12,17 +12,20 @@ interface RollupOpts {
 /**
  * 铺平用户配置文件中的 input => output, 变为 1 对 1 的形式
  */
-function flatUserRollupConfig(
+function transformRollupConfig(
   cwd: string,
   userConfig: UserRollupConfig,
-): InternalRollupConfig[] {
-  return userConfig.input.flatMap((input) => {
-    return userConfig.output.map((output) => {
+): TransformedRollupConfig[] {
+  const { input, output, plugins = [], extraBabelPlugins = [] } = userConfig
+  return input.flatMap((inp) => {
+    return output.map((out) => {
       return {
-        input: join(cwd, input),
-        output: produce(output, (draft) => {
+        input: join(cwd, inp),
+        output: produce(out, (draft) => {
           draft.file = join(cwd, draft.file)
         }),
+        plugins,
+        extraBabelPlugins,
       }
     })
   })
@@ -30,26 +33,18 @@ function flatUserRollupConfig(
 
 export default async function build(opts: RollupOpts) {
   const { cwd, userRollupConfig } = opts
-  const rollupConfigs = flatUserRollupConfig(cwd, userRollupConfig).map(
-    (config) =>
-      getRollupConfig({
-        cwd,
-        internalRollupConfig: config,
-      }),
-  )
+  const rollupConfigs = transformRollupConfig(cwd, userRollupConfig)
 
   await Promise.all(
     rollupConfigs.map(async (rollupConfig) => {
       let bundle
       try {
-        const { output, ...input } = rollupConfig
-        bundle = await rollup(input)
-        // 删除一些自定义的属性
-        const allowedOutput = produce(output, (draft) => {
-          delete draft.target
+        const { output, ...input } = getRollupConfig({
+          cwd,
+          rollupConfig,
         })
-
-        await bundle.write(allowedOutput)
+        bundle = await rollup(input)
+        await bundle.write(output)
       } catch (err) {
         console.error(err)
         throw err

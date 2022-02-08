@@ -23,4 +23,5 @@ export const rollup = {
   ],
   plugins: [],
   external: [],
+  extraBabelPlugins: [],
 }

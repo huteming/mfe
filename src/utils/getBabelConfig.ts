@@ -4,10 +4,11 @@ interface IGetBabelConfigOpts {
   target: 'browser' | 'node'
   format: ModuleFormat
   typescript: boolean
+  plugins?: any[]
 }
 
 export default function (opts: IGetBabelConfigOpts) {
-  const { target, typescript, format } = opts
+  const { target, typescript, format, plugins = [] } = opts
   const isBrowser = target === 'browser'
 
   const targets = isBrowser
@@ -46,6 +47,7 @@ export default function (opts: IGetBabelConfigOpts) {
           // version: require('@babel/runtime/package.json').version,
         },
       ],
+      ...plugins,
     ],
   }
 }

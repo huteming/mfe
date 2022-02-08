@@ -1,4 +1,4 @@
-import { CommandOptions, InternalBabelConfig, UserBabelConfig } from '../types'
+import { TransformedBabelConfig, UserBabelConfig } from '../types'
 import { join, extname, relative } from 'path'
 import { existsSync, readFileSync, statSync } from 'fs'
 import getTsconfigCompilerOptions from './getTsconfigCompilerOptions'
@@ -24,23 +24,25 @@ function isTransform(path: string) {
   return babelTransformRegexp.test(path) && !path.endsWith('.d.ts')
 }
 
-function flatUserBabelConfig(
+function transformBabelConfig(
   cwd: string,
   userBabelConfig: UserBabelConfig,
-): InternalBabelConfig[] {
-  return userBabelConfig.output.map((output) => {
+): TransformedBabelConfig[] {
+  const { output, plugins = [] } = userBabelConfig
+  return output.map((output) => {
     return {
       output,
+      plugins,
     }
   })
 }
 
 export default function build(opts: BabelOpts) {
   const { cwd, userBabelConfig } = opts
-  const babelConfigs = flatUserBabelConfig(cwd, userBabelConfig)
+  const babelConfigs = transformBabelConfig(cwd, userBabelConfig)
 
   babelConfigs.forEach((babelConfig) => {
-    const { output } = babelConfig
+    const { output, plugins } = babelConfig
     const { dir, target, format } = output
     const srcPath = join(cwd, 'src')
     const targetPath = join(cwd, dir)
@@ -62,6 +64,7 @@ export default function build(opts: BabelOpts) {
       target,
       format,
       typescript: true,
+      plugins,
     })
 
     vfs
