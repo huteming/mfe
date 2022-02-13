@@ -8,6 +8,9 @@ const external = [
   'fs',
   'path',
   'typescript',
+  'assert',
+  'jest',
+  'jest-cli/build/cli/args',
 ]
 
 export default [

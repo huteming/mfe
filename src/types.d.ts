@@ -1,6 +1,12 @@
 import { RollupOptions, OutputOptions, ModuleFormat } from 'rollup'
+import { runCLI } from 'jest'
 
-export interface CommandOptions {
+export interface BuildCommandOptions {
+  config?: string
+}
+
+export interface TestCommandOptions
+  extends Partial<ArgsType<typeof runCLI>['0']> {
   config?: string
 }
 
@@ -59,3 +65,11 @@ export interface BuildRollupConfig extends RollupOptions {
 }
 
 export type BuildRollupConfigOutput = Omit<RollupOutputOptions, 'target'>
+
+// ------------ 其他 ------------
+
+type ArgsType<T extends (...args: any[]) => any> = T extends (
+  ...args: infer U
+) => any
+  ? U
+  : never

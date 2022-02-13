@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "test": "node ../../bin/mfe.js test"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.0"
+  },
+  "dependencies": {
+    "jest-cli": "^27.5.1"
+  }
+}
