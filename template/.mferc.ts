@@ -4,8 +4,6 @@ export const babel = {
       dir: 'dist',
       format: '', // 'esm' | 'cjs'
       target: '', // "node" | "browser"
-      // 对于工具来说推荐开启，可加速命令行执行速度，同时减少依赖和耦合。
-      lazy: false, // false | true
     },
   ],
   plugins: [],

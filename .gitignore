@@ -11,6 +11,9 @@ coverage
 
 # production
 lib
+dist
+dist-cjs
+dist-esm
 
 # misc
 .DS_Store
