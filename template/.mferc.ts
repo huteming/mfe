@@ -17,6 +17,7 @@ export const rollup = {
       format: 'cjs', // 输出的文件类型 (amd, cjs, esm, iife, umd)
       exports: 'auto',
       target: '', // "node" | "browser"
+      minify: false, // boolean
     },
   ],
   plugins: [],

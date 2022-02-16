@@ -29,7 +29,14 @@ export default function (opts: IGetBabelConfigOpts) {
     ],
     plugins: [
       ...(format === 'cjs' && !isBrowser
-        ? [[require.resolve('@babel/plugin-transform-modules-commonjs'), {}]]
+        ? [
+            [
+              require.resolve('@babel/plugin-transform-modules-commonjs'),
+              {
+                lazy: true,
+              },
+            ],
+          ]
         : []),
       ...(isBrowser ? [require.resolve('babel-plugin-react-require')] : []),
       require.resolve('@babel/plugin-syntax-dynamic-import'),

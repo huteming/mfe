@@ -21,6 +21,7 @@ interface RollupOutputOptions extends OutputOptions {
   file: string
   format: ModuleFormat
   target: 'node' | 'browser'
+  minify?: boolean
 }
 
 interface IBabelOutputOptions {
@@ -64,7 +65,10 @@ export interface BuildRollupConfig extends RollupOptions {
   plugins: any[]
 }
 
-export type BuildRollupConfigOutput = Omit<RollupOutputOptions, 'target'>
+export type BuildRollupConfigOutput = Omit<
+  RollupOutputOptions,
+  'target' | 'minify'
+>
 
 // ------------ 其他 ------------
 

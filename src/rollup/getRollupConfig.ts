@@ -2,6 +2,7 @@ import { extname, join } from 'path'
 import {
   BuildRollupConfig,
   BuildRollupConfigOutput,
+  RollupOutputOptions,
   TransformedRollupConfig,
 } from '../types'
 import { ScriptTarget } from 'typescript'
@@ -15,6 +16,8 @@ import postcss from 'rollup-plugin-postcss'
 import NpmImport from 'less-plugin-npm-import'
 import autoprefixer from 'autoprefixer'
 import babel from '@rollup/plugin-babel'
+import commonjs from '@rollup/plugin-commonjs'
+import { terser } from 'rollup-plugin-terser'
 import getBabelConfig from '@/utils/getBabelConfig'
 import produce from 'immer'
 
@@ -56,7 +59,7 @@ export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
     plugins: extraRollupPlugins,
     extraBabelPlugins,
   } = rollupConfig
-  const { target, format } = output
+  const { target, format, minify } = output
   const entryExt = extname(input)
   const isTypeScript = entryExt === '.ts' || entryExt === '.tsx'
   const extensions = ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs']
@@ -75,12 +78,22 @@ export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
     ...Object.keys(pkg.peerDependencies || {}),
   ]
 
+  // umd 只要 external peerDependencies
+  const externalPeerDeps = [...Object.keys(pkg.peerDependencies || {})]
+
   const babelConfig = getBabelConfig({
     format,
     target: target || 'browser',
     typescript: true,
     plugins: extraBabelPlugins,
   })
+
+  const extraUmdPlugins = [
+    // A Rollup plugin to convert CommonJS modules to ES6
+    commonjs({
+      include: /node_modules/,
+    }),
+  ]
 
   const plugins = [
     replace({
@@ -138,16 +151,32 @@ export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
           extensions,
         }),
     ...extraRollupPlugins,
+    ...(format === 'umd' ? extraUmdPlugins : []),
+    ...(minify
+      ? [
+          terser({
+            compress: {
+              pure_getters: true,
+              unsafe: true,
+              unsafe_comps: true,
+            },
+          }),
+        ]
+      : []),
   ]
 
-  const buildOutput: BuildRollupConfigOutput = produce(output, (draft: any) => {
-    delete draft.target
-  })
+  const buildOutput: BuildRollupConfigOutput = produce(
+    output,
+    (draft: Partial<RollupOutputOptions>) => {
+      delete draft.target
+      delete draft.minify
+    },
+  )
 
   return {
     input,
     output: buildOutput,
     plugins,
-    external: testExternal(external, []),
+    external: testExternal(format === 'umd' ? externalPeerDeps : external, []),
   }
 }
