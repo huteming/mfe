@@ -114,7 +114,7 @@ export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
           plugins: [new NpmImport({ prefix: '~' })],
           javascriptEnabled: true,
         },
-        sass: {},
+        sass: false,
         stylus: false,
       },
       plugins: [

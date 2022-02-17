@@ -62,7 +62,6 @@
     "jest-environment-jsdom-fourteen": "^1.0.1",
     "less": "^4.1.2",
     "less-plugin-npm-import": "^2.1.0",
-    "node-sass": "^7.0.1",
     "postcss": "^8.4.6",
     "react": "16.x",
     "react-dom": "16.x",
