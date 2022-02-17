@@ -1342,6 +1342,13 @@
     slash "^3.0.0"
     strip-ansi "^6.0.0"
 
+"@jest/create-cache-key-function@^27.4.2":
+  version "27.5.1"
+  resolved "https://registry.npmmirror.com/@jest/create-cache-key-function/-/create-cache-key-function-27.5.1.tgz#7448fae15602ea95c828f5eceed35c202a820b31"
+  integrity sha512-dmH1yW+makpTSURTy8VzdUwFnfQh1G8R+DxO2Ho2FFmBbKFEVm+3jWdvFhE2VqB/LATCTokkP0dotjyQyw5/AQ==
+  dependencies:
+    "@jest/types" "^27.5.1"
+
 "@jest/environment@^24.3.0":
   version "24.9.0"
   resolved "https://registry.npmmirror.com/@jest/environment/-/environment-24.9.0.tgz#21e3afa2d65c0586cbd6cbefe208bafade44ab18"
@@ -1533,6 +1540,17 @@
     "@types/istanbul-reports" "^3.0.0"
     "@types/node" "*"
     "@types/yargs" "^15.0.0"
+    chalk "^4.0.0"
+
+"@jest/types@^27.5.1":
+  version "27.5.1"
+  resolved "https://registry.npmmirror.com/@jest/types/-/types-27.5.1.tgz#3c79ec4a8ba61c170bf937bcf9e98a9df175ec80"
+  integrity sha512-Cx46iJ9QpwQTjIdq5VJu2QTMMs3QlEjI0x1QbBP5W1+nMzyc2XmimiRR/CbX9TO0cPTeUlxWMOu8mslYsJ8DEw==
+  dependencies:
+    "@types/istanbul-lib-coverage" "^2.0.0"
+    "@types/istanbul-reports" "^3.0.0"
+    "@types/node" "*"
+    "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
 "@jridgewell/resolve-uri@^3.0.3":
@@ -1750,6 +1768,97 @@
     "@svgr/plugin-jsx" "^6.2.1"
     "@svgr/plugin-svgo" "^6.2.0"
     rollup-pluginutils "^2.8.2"
+
+"@swc/core-android-arm-eabi@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-android-arm-eabi/-/core-android-arm-eabi-1.2.141.tgz#c28b42ee2159d382bde416b65b6c678b01789012"
+  integrity sha512-rkp8KPR93/H25KL+nGZqDZahTLrW6ub09GsjzfZWTijAeOn0NnLLWzSdY60UTbvBUz/GJP6ueNWmV8V8q8MkKw==
+
+"@swc/core-android-arm64@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-android-arm64/-/core-android-arm64-1.2.141.tgz#6cb42e8c05c785998adce8c10e5de96edcc44bb0"
+  integrity sha512-S9wNosJZA463nu+MHHv9xBwwe4KehEiBpKyk9gytGgblCD0aXa6Seb6CtsoZbo3C/Q881sVi9JG8COXFRFby/g==
+
+"@swc/core-darwin-arm64@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-darwin-arm64/-/core-darwin-arm64-1.2.141.tgz#94cac14593413d9de074423a1bdd515d34c1df75"
+  integrity sha512-jlWgQw+S208aETBH2mBZUWknObJQOMk1iuhxdqMsKzFSnmSnitEtCNIP55LkBHdvG8/k5elR6HQ0JPsEnQSiwA==
+
+"@swc/core-darwin-x64@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-darwin-x64/-/core-darwin-x64-1.2.141.tgz#5d4c86272534efb51bbd2297bfd659fa5751cb72"
+  integrity sha512-fr4BXQhZe7SrCepgYeBedEq5NLO5hpUNoC84NN9njygP0xe+HP0SJkCHZ0INKHdBoQV+0qdl/JWZnYTSoOD9Hg==
+
+"@swc/core-freebsd-x64@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-freebsd-x64/-/core-freebsd-x64-1.2.141.tgz#85191428774cc60bc0438942912d77f25b4a20f1"
+  integrity sha512-BbYv36t2vnZ9A1PID5/tLv64/dPxFlp6JAtGDPhpc53I6WXORHDyL9oI8FYL0zLYByx1nHEBnu9ApBjmMEGfPw==
+
+"@swc/core-linux-arm-gnueabihf@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-linux-arm-gnueabihf/-/core-linux-arm-gnueabihf-1.2.141.tgz#9b8e744a7fcbfc5ad938fb7be9bb13685aaef372"
+  integrity sha512-GhXllm5F2aKs1uNn7Se2dPkszKPm0JJtPSMxalcn+axiNVaTreXs0AnTploj/9mwjNzYibVgeefbbQRJ/dPH4g==
+
+"@swc/core-linux-arm64-gnu@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-linux-arm64-gnu/-/core-linux-arm64-gnu-1.2.141.tgz#9c376bafb9c6062a93158aca38b4869e50797e66"
+  integrity sha512-KkhDgTAT1zac4D3jAzLgDkjCjNg/YhVW4kqHNR6yZVO8E8SNd2mfyGKpzI8xpZzqH9VF8MUJ3tcfZEa+O3q57A==
+
+"@swc/core-linux-arm64-musl@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-linux-arm64-musl/-/core-linux-arm64-musl-1.2.141.tgz#ba7db26894eec0439e45d79f3ab4a41de35347d9"
+  integrity sha512-5q+OfJM+FGpvzTyET8vuLY4GNKdiEOTtS5Td4oWQHQvmy6swUE/+WFveaNrIpbv9W2fMvXINHILeYz0fsBjzcg==
+
+"@swc/core-linux-x64-gnu@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-linux-x64-gnu/-/core-linux-x64-gnu-1.2.141.tgz#9d2bb52543d3ef496fbfdec1efde22b34395770a"
+  integrity sha512-IR84Sp7Jftsot/ZSuLgkoIHNsAMMzsGtT28oBNWlEcIEGSjps9lAd4N1uRFo9nK35fYjQHxQ/0bujbHqeO7hhQ==
+
+"@swc/core-linux-x64-musl@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.2.141.tgz#44e556dd90bccde262b09deed9b220fc0446172d"
+  integrity sha512-sV7qc71++h19pp7FyU+1FWEVSHeghuGO67/VKNYdo6NpJhIuR4F0J76H6WP2hMlLgvWCd/lXudljKr0vDBFW5g==
+
+"@swc/core-win32-arm64-msvc@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-win32-arm64-msvc/-/core-win32-arm64-msvc-1.2.141.tgz#0b99c64afe93d0af641b46f9f55878df6c31898f"
+  integrity sha512-cqsuUOP+MmuKZ6KR5CaC3l6pUkULGpSDjmbFtoSTjuduu144GQ2HOpJslxOMPTkJbDm2fVYYSlPZTyIbBrCj1g==
+
+"@swc/core-win32-ia32-msvc@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-win32-ia32-msvc/-/core-win32-ia32-msvc-1.2.141.tgz#381a86e882ee4127da627b8c6b3f03704df47834"
+  integrity sha512-jkHWFwgTjOl9HChJpl1gZPdPSUUhwOZ/3a/SBnlrbuePcfro3DIbJysIcizpJtCGtnX7U3XECAzZn8c03OiKfg==
+
+"@swc/core-win32-x64-msvc@1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.2.141.tgz#d45edffedc3773568818f3814ae92417408cf9ed"
+  integrity sha512-qCFMX/6HtBksLZeVB/jrbxZ1TxqEac03zvRGDe3N4ZVBtMZi7nfayJTsYRrvfw87XOegIz5mEWfShxEy44FtGw==
+
+"@swc/core@^1.2.141":
+  version "1.2.141"
+  resolved "https://registry.npmmirror.com/@swc/core/-/core-1.2.141.tgz#5b224f99e7575941608c2d30d5e2fc0a57506d1e"
+  integrity sha512-etjy0pWW2i3BDpTtg72CzFW6m91g3WC8incE82w37tll9easR9fJE4+njs1h4fP164xAiyAXOfsBECxsfH+t6A==
+  optionalDependencies:
+    "@swc/core-android-arm-eabi" "1.2.141"
+    "@swc/core-android-arm64" "1.2.141"
+    "@swc/core-darwin-arm64" "1.2.141"
+    "@swc/core-darwin-x64" "1.2.141"
+    "@swc/core-freebsd-x64" "1.2.141"
+    "@swc/core-linux-arm-gnueabihf" "1.2.141"
+    "@swc/core-linux-arm64-gnu" "1.2.141"
+    "@swc/core-linux-arm64-musl" "1.2.141"
+    "@swc/core-linux-x64-gnu" "1.2.141"
+    "@swc/core-linux-x64-musl" "1.2.141"
+    "@swc/core-win32-arm64-msvc" "1.2.141"
+    "@swc/core-win32-ia32-msvc" "1.2.141"
+    "@swc/core-win32-x64-msvc" "1.2.141"
+
+"@swc/jest@^0.2.17":
+  version "0.2.17"
+  resolved "https://registry.npmmirror.com/@swc/jest/-/jest-0.2.17.tgz#0a36083cf5bca39c3c03323cdfc84b61fd670ac2"
+  integrity sha512-n/g989+O8xxMcTZnP0phDrrgezGZBQBf7cX4QuzEsn07QkWbqmMsfaCxdF0kzajXublXWJ8yk5vRe3VNk1tczA==
+  dependencies:
+    "@jest/create-cache-key-function" "^27.4.2"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -2052,6 +2161,13 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@types/yargs@^16.0.0":
+  version "16.0.4"
+  resolved "https://registry.npmmirror.com/@types/yargs/-/yargs-16.0.4.tgz#26aad98dd2c2a38e421086ea9ad42b9e51642977"
+  integrity sha512-T8Yc9wt/5LbJyCaLiHPReJa0kApcIgJ7Bn735GjItUfh08Z1pJvu8QZqb9s+mMvKV6WUQRV7K2R46YbjMXTTJw==
+  dependencies:
+    "@types/yargs-parser" "*"
+
 "@wessberg/stringutil@^1.0.19":
   version "1.0.19"
   resolved "https://registry.npmmirror.com/@wessberg/stringutil/-/stringutil-1.0.19.tgz#baadcb6f4471fe2d46462a7d7a8294e4b45b29ad"
@@ -2349,7 +2465,7 @@ aws4@^1.8.0:
   resolved "https://registry.npmmirror.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
-babel-jest@26.x, babel-jest@^26.6.3:
+babel-jest@^26.6.3:
   version "26.6.3"
   resolved "https://registry.npmmirror.com/babel-jest/-/babel-jest-26.6.3.tgz#d87d25cb0037577a0c89f82e5755c5d293c01056"
   integrity sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==

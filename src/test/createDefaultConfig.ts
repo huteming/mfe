@@ -35,9 +35,12 @@ export default function (cwd: string) {
     testMatch: [`**/?*.(${testMatchTypes.join('|')}).(j|t)s?(x)`],
     testPathIgnorePatterns: ['/node_modules/', '/fixtures/'],
     transform: {
-      '^.+\\.(js|jsx|ts|tsx)$': require.resolve(
-        '../static/helpers/transformers/javascript',
-      ),
+      // 2022-02-17: 尝试使用 swc 替换 babel 作为 jest 测试时编译工具
+      '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest', {}],
+      // '^.+\\.(js|jsx|ts|tsx)$': require.resolve(
+      //   '../static/helpers/transformers/javascript',
+      // ),
+
       '^.+\\.(css|less|sass|scss|stylus)$': require.resolve(
         '../static/helpers/transformers/css',
       ),

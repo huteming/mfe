@@ -20,5 +20,6 @@ describe('react component', () => {
     })
 
     expect(wrapper.props().bar).toEqual('foo')
+    expect(wrapper.text()).toEqual('foo')
   })
 })

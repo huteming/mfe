@@ -1,4 +1,4 @@
-const babelJest = require('babel-jest')
+const babelJest = require('babel-jest') // 26.x
 
 module.exports = babelJest.createTransformer({
   presets: [
