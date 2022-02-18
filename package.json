@@ -9,7 +9,8 @@
   "types": "lib/index.d.ts",
   "files": [
     "lib",
-    "template"
+    "template",
+    "static"
   ],
   "scripts": {
     "build": "rollup -c",
