@@ -1,4 +1,8 @@
-import { TransformedBabelConfig, UserBabelConfig } from '../types'
+import {
+  BuildCommandOptions,
+  TransformedBabelConfig,
+  UserBabelConfig,
+} from '../types'
 import { join, extname, relative } from 'path'
 import { existsSync, readFileSync, statSync } from 'fs'
 import getTsconfigCompilerOptions from './getTsconfigCompilerOptions'
@@ -8,6 +12,7 @@ import through from 'through2'
 import gulpIf from 'gulp-if'
 import gulpTs from 'gulp-typescript'
 import babel from 'gulp-babel'
+import del from 'del'
 
 interface BabelOpts {
   cwd: string
@@ -37,7 +42,7 @@ function transformBabelConfig(
   })
 }
 
-export default function build(opts: BabelOpts) {
+export default function build(opts: BabelOpts, options: BuildCommandOptions) {
   const { cwd, userBabelConfig } = opts
   const babelConfigs = transformBabelConfig(cwd, userBabelConfig)
 
@@ -66,6 +71,11 @@ export default function build(opts: BabelOpts) {
       typescript: true,
       plugins,
     })
+
+    // clean dir
+    if (options.clean) {
+      del.sync([`${dir}/*`])
+    }
 
     vfs
       .src(

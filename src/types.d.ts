@@ -3,6 +3,7 @@ import { runCLI } from 'jest'
 
 export interface BuildCommandOptions {
   config?: string
+  clean?: boolean
 }
 
 export interface TestCommandOptions

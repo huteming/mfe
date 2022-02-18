@@ -18,6 +18,7 @@ export default async function main() {
     .command('build')
     .description('构建')
     .option('-c --config <config>', '配置文件')
+    .option('--clean', '清除目录文件夹')
     .action((options: BuildCommandOptions) => {
       // 配置文件路径
       const configFile = (() => {
@@ -37,17 +38,23 @@ export default async function main() {
 
       // babel 编译
       if (userConfig.babel) {
-        babel({
-          cwd,
-          userBabelConfig: userConfig.babel,
-        })
+        babel(
+          {
+            cwd,
+            userBabelConfig: userConfig.babel,
+          },
+          options,
+        )
       }
       // rollup 打包
       if (userConfig.rollup) {
-        rollup({
-          cwd,
-          userRollupConfig: userConfig.rollup,
-        })
+        rollup(
+          {
+            cwd,
+            userRollupConfig: userConfig.rollup,
+          },
+          options,
+        )
       }
     })
 

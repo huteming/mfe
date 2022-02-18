@@ -1,8 +1,14 @@
 import { rollup } from 'rollup'
 import getRollupConfig from './getRollupConfig'
-import { TransformedRollupConfig, UserRollupConfig } from '../types'
+import {
+  BuildCommandOptions,
+  BuildRollupConfigOutput,
+  TransformedRollupConfig,
+  UserRollupConfig,
+} from '../types'
 import { join, extname, relative } from 'path'
 import produce from 'immer'
+import del from 'del'
 
 interface RollupOpts {
   cwd: string
@@ -31,7 +37,15 @@ function transformRollupConfig(
   })
 }
 
-export default async function build(opts: RollupOpts) {
+function getOutputDir(output: BuildRollupConfigOutput) {
+  const outPaths = output.file.split('/')
+  return outPaths[outPaths.length - 2]
+}
+
+export default async function build(
+  opts: RollupOpts,
+  options: BuildCommandOptions,
+) {
   const { cwd, userRollupConfig } = opts
   const rollupConfigs = transformRollupConfig(cwd, userRollupConfig)
 
@@ -43,6 +57,11 @@ export default async function build(opts: RollupOpts) {
           cwd,
           rollupConfig,
         })
+        // clean dir
+        if (options.clean) {
+          await del([`${getOutputDir(output)}/*`])
+        }
+
         bundle = await rollup(input)
         await bundle.write(output)
       } catch (err) {
