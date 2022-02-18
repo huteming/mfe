@@ -1,5 +1,6 @@
 import { extname, join } from 'path'
 import {
+  BuildCommandOptions,
   BuildRollupConfig,
   BuildRollupConfigOutput,
   RollupOutputOptions,
@@ -18,6 +19,7 @@ import autoprefixer from 'autoprefixer'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
+import { visualizer } from 'rollup-plugin-visualizer'
 import getBabelConfig from '@/utils/getBabelConfig'
 import produce from 'immer'
 import { existsSync, readFileSync, statSync } from 'fs'
@@ -52,7 +54,10 @@ function testExternal(external: string[], excludes: string[]) {
   }
 }
 
-export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
+export default function (
+  opts: IGetRollupConfigOpts,
+  options: BuildCommandOptions,
+): BuildRollupConfig {
   const { cwd, rollupConfig } = opts
   const {
     input,
@@ -176,6 +181,8 @@ export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
           }),
         ]
       : []),
+    // https://github.com/btd/rollup-plugin-visualizer
+    ...(options.stats ? [visualizer()] : []),
   ]
 
   const buildOutput: BuildRollupConfigOutput = produce(

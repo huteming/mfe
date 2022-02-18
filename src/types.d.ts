@@ -4,6 +4,7 @@ import { runCLI } from 'jest'
 export interface BuildCommandOptions {
   config?: string
   clean?: boolean
+  stats?: boolean
 }
 
 export interface TestCommandOptions

@@ -12,8 +12,7 @@ coverage
 # production
 lib
 dist
-dist-cjs
-dist-esm
+stats.html
 
 # misc
 .DS_Store

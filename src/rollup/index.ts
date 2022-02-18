@@ -9,6 +9,7 @@ import {
 import { join, extname, relative } from 'path'
 import produce from 'immer'
 import del from 'del'
+import getOutputDir from './getOutputDir'
 
 interface RollupOpts {
   cwd: string
@@ -37,11 +38,6 @@ function transformRollupConfig(
   })
 }
 
-function getOutputDir(output: BuildRollupConfigOutput) {
-  const outPaths = output.file.split('/')
-  return outPaths[outPaths.length - 2]
-}
-
 export default async function build(
   opts: RollupOpts,
   options: BuildCommandOptions,
@@ -53,10 +49,13 @@ export default async function build(
     rollupConfigs.map(async (rollupConfig) => {
       let bundle
       try {
-        const { output, ...input } = getRollupConfig({
-          cwd,
-          rollupConfig,
-        })
+        const { output, ...input } = getRollupConfig(
+          {
+            cwd,
+            rollupConfig,
+          },
+          options,
+        )
         // clean dir
         if (options.clean) {
           await del([`${getOutputDir(output)}/*`])

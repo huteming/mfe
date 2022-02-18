@@ -17,8 +17,9 @@ export default async function main() {
   program
     .command('build')
     .description('构建')
-    .option('-c --config <config>', '配置文件')
+    .option('--config <config>', '配置文件')
     .option('--clean', '清除目录文件夹')
+    .option('--stats', '生成构建分析文件')
     .action((options: BuildCommandOptions) => {
       // 配置文件路径
       const configFile = (() => {
