@@ -83,5 +83,8 @@
     "@types/through2": "^2.0.36",
     "@types/vinyl-fs": "^2.4.12",
     "husky": "^7.0.4"
+  },
+  "resolutions": {
+    "@types/react": "16.x"
   }
 }
