@@ -7,11 +7,12 @@ export default function (cwd: string) {
   const hasSrc = existsSync(src)
 
   return {
+    rootDir: cwd,
     clearMocks: true,
 
     collectCoverageFrom: [
       'index.{js,jsx,ts,tsx}',
-      hasSrc && 'src/**/*.{js,jsx,ts,tsx}',
+      hasSrc && '<rootDir>/src/**/*.{js,jsx,ts,tsx}',
       '!**/typings/**',
       '!**/types/**',
       '!**/fixtures/**',
@@ -21,7 +22,7 @@ export default function (cwd: string) {
     ].filter(Boolean),
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
-      '@/(.*)': hasSrc ? join(src, '$1') : join(cwd, '$1'),
+      '@/(.*)': '<rootDir>/src/$1',
       // 静态资源
       // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       //   require.resolve('../static/mocks/fileMocks'),
