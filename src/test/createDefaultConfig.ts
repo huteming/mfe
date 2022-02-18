@@ -3,7 +3,8 @@ import { join } from 'path'
 
 export default function (cwd: string) {
   const testMatchTypes = ['spec', 'test']
-  const hasSrc = existsSync(join(cwd, 'src'))
+  const src = join(cwd, 'src')
+  const hasSrc = existsSync(src)
 
   return {
     clearMocks: true,
@@ -20,7 +21,7 @@ export default function (cwd: string) {
     ].filter(Boolean),
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
-      '@/(.*)': 'src/$1',
+      '@/(.*)': hasSrc ? join(src, '$1') : join(cwd, '$1'),
       // 静态资源
       // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       //   require.resolve('../static/mocks/fileMocks'),
