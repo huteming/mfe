@@ -182,7 +182,13 @@ export default function (
         ]
       : []),
     // https://github.com/btd/rollup-plugin-visualizer
-    ...(options.stats ? [visualizer()] : []),
+    ...(options.stats
+      ? [
+          visualizer({
+            gzipSize: true,
+          }),
+        ]
+      : []),
   ]
 
   const buildOutput: BuildRollupConfigOutput = produce(
