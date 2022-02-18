@@ -5,7 +5,7 @@ import {
   RollupOutputOptions,
   TransformedRollupConfig,
 } from '../types'
-import { ScriptTarget } from 'typescript'
+import { CompilerOptions, ScriptTarget } from 'typescript'
 import typescript from 'rollup-plugin-ts'
 import json from '@rollup/plugin-json'
 import url from '@rollup/plugin-url'
@@ -20,6 +20,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
 import getBabelConfig from '@/utils/getBabelConfig'
 import produce from 'immer'
+import { existsSync, readFileSync, statSync } from 'fs'
 
 interface IGetRollupConfigOpts {
   cwd: string
@@ -95,6 +96,24 @@ export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
     }),
   ]
 
+  const getTsConfig = () => {
+    if (existsSync(join(cwd, 'tsconfig.json'))) {
+      return (resolvedConfig: CompilerOptions) => ({
+        ...resolvedConfig,
+        declaration: true,
+        target: ScriptTarget.ESNext,
+      })
+    }
+    return {
+      allowSyntheticDefaultImports: true,
+      declaration: true,
+      module: 'esnext',
+      target: 'esnext',
+      moduleResolution: 'node',
+      jsx: 'react',
+    }
+  }
+
   const plugins = [
     replace({
       values: {
@@ -133,13 +152,7 @@ export default function (opts: IGetRollupConfigOpts): BuildRollupConfig {
       ? typescript({
           transpiler: 'babel',
           babelConfig,
-          tsconfig: (resolvedConfig) => {
-            return {
-              ...resolvedConfig,
-              declaration: true,
-              target: ScriptTarget.ESNext,
-            }
-          },
+          tsconfig: getTsConfig(),
         })
       : babel({
           ...babelConfig,
