@@ -1,10 +1,37 @@
 import { existsSync } from 'fs'
 import { join } from 'path'
+import type { Config } from '@jest/types'
+import { UserJestConfig } from '@/types'
 
-export default function (cwd: string) {
+interface Opts {
+  cwd: string
+  userJestConfig?: UserJestConfig
+}
+
+export default function (opts: Opts): Config.InitialOptions {
+  const { cwd, userJestConfig } = opts
+  const { extraBabelPlugins } = userJestConfig || {}
   const testMatchTypes = ['spec', 'test']
   const src = join(cwd, 'src')
   const hasSrc = existsSync(src)
+
+  const babelJestOptions = {
+    presets: [
+      [
+        require.resolve('@babel/preset-env'),
+        {
+          targets: {
+            node: 'current',
+          },
+        },
+      ],
+      require.resolve('@babel/preset-react'),
+      require.resolve('@babel/preset-typescript'),
+    ],
+    plugins: [...(extraBabelPlugins || [])],
+    babelrc: false,
+    configFile: false,
+  }
 
   return {
     rootDir: cwd,
@@ -19,7 +46,7 @@ export default function (cwd: string) {
       '!**/examples/**',
       '!**/*.stories.{js,jsx,ts,tsx}',
       '!**/*.d.ts',
-    ].filter(Boolean),
+    ].filter(Boolean) as string[],
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
       '@/(.*)': '<rootDir>/src/$1',
@@ -38,7 +65,9 @@ export default function (cwd: string) {
     testPathIgnorePatterns: ['/node_modules/', '/fixtures/'],
     transform: {
       // 2022-02-17: 尝试使用 swc 替换 babel 作为 jest 测试时编译工具
-      '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest', {}],
+      // 2022-02-19: swc 缺少小众的 babel 插件支持, 如: babel-plugin-import
+      // '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest', {}],
+      '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', babelJestOptions],
       // '^.+\\.(js|jsx|ts|tsx)$': require.resolve(
       //   '../static/helpers/transformers/javascript',
       // ),

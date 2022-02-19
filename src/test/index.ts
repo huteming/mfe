@@ -15,39 +15,46 @@ import createDefaultConfig from './createDefaultConfig'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { options as cliOptions } from 'jest-cli/build/cli/args'
-import { TestCommandOptions } from '@/types'
+import { TestCommandOptions, UserJestConfig } from '@/types'
+import produce from 'immer'
 
 interface TestOpts {
   cwd: string
-  args: TestCommandOptions
+  userJestConfig?: UserJestConfig
 }
 
-export default async function test(opts: TestOpts) {
-  const { cwd, args } = opts
+export default async function test(
+  opts: TestOpts,
+  options: TestCommandOptions,
+) {
+  const { cwd, userJestConfig } = opts
 
   const packageJSONPath = join(cwd, 'package.json')
   const packageJestConfig =
     existsSync(packageJSONPath) && require(packageJSONPath).jest
 
-  const userJestConfigFile = join(cwd, 'jest.config.js')
-  const userJestConfig =
-    existsSync(userJestConfigFile) && require(userJestConfigFile)
-
   const config = mergeConfig(
-    createDefaultConfig(cwd),
+    createDefaultConfig({
+      cwd,
+      userJestConfig,
+    }),
     packageJestConfig,
-    userJestConfig,
+    produce(userJestConfig, (draft) => {
+      delete draft?.extraBabelPlugins
+    }),
   )
 
+  // cliOptions 包含 jest 所有的配置属性
+  // 这里是获取命令行中 jest 的配置
   const argsConfig = Object.keys(cliOptions).reduce((prev, name) => {
-    if (args[name]) {
-      prev[name] = args[name]
+    if (options[name]) {
+      prev[name] = options[name]
     }
 
     // @ts-ignore
     const { alias } = cliOptions[name]
-    if (alias && args[alias]) {
-      prev[name] = args[alias]
+    if (alias && options[alias]) {
+      prev[name] = options[alias]
     }
     return prev
   }, {} as any)
@@ -55,8 +62,6 @@ export default async function test(opts: TestOpts) {
   try {
     await runCLI(
       {
-        // _: args._ || [],
-        // $0: args.$0 || '',
         // 必须是单独的 config 配置，值为 string，否则不生效
         config: JSON.stringify(config),
         ...argsConfig,

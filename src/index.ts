@@ -12,31 +12,27 @@ export default async function main() {
   const program = new Command()
   program.version(version)
 
+  // 根路径
   const cwd = process.cwd()
+  // 配置文件路径
+  const configFile = (() => {
+    const userFile = join(cwd, '.mferc.ts')
+    const defaultFile = join(__dirname, '../static/.mferc.ts')
+    if (existsSync(userFile)) {
+      return userFile
+    }
+    return defaultFile
+  })()
+  // 解析配置文件语法
+  registerBabel(configFile)
+  const userConfig: UserConfig = require(configFile)
 
   program
     .command('build')
     .description('构建')
-    .option('--config <config>', '配置文件')
     .option('--clean', '清除目录文件夹')
     .option('--stats', '生成构建分析文件')
     .action((options: BuildCommandOptions) => {
-      // 配置文件路径
-      const configFile = (() => {
-        const defaultFile = join(cwd, '.mferc.ts')
-        if (!options.config) {
-          return defaultFile
-        }
-        const customFile = join(cwd, options.config)
-        if (existsSync(customFile)) {
-          return customFile
-        }
-        return defaultFile
-      })()
-
-      registerBabel(configFile)
-      const userConfig: UserConfig = require(configFile)
-
       // babel 编译
       if (userConfig.babel) {
         babel(
@@ -62,12 +58,14 @@ export default async function main() {
   program
     .command('test')
     .description('测试')
-    .option('-c --config <config>', '配置文件')
     .action((options: TestCommandOptions) => {
-      test({
-        cwd,
-        args: options,
-      })
+      test(
+        {
+          cwd,
+          userJestConfig: userConfig.jest,
+        },
+        options,
+      )
     })
 
   await program.parseAsync(process.argv)

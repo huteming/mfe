@@ -1,5 +1,5 @@
 import { RollupOptions, OutputOptions, ModuleFormat } from 'rollup'
-import { runCLI } from 'jest'
+import type { Config } from '@jest/types'
 
 export interface BuildCommandOptions {
   config?: string
@@ -7,16 +7,18 @@ export interface BuildCommandOptions {
   stats?: boolean
 }
 
-export interface TestCommandOptions
-  extends Partial<ArgsType<typeof runCLI>['0']> {
-  config?: string
-}
+export interface TestCommandOptions extends Config.Argv {}
 
 // ------------ 用户配置 ------------
 
 export interface UserConfig {
   babel?: UserBabelConfig
   rollup?: UserRollupConfig
+  jest?: UserJestConfig
+}
+
+export interface UserJestConfig extends Config.InitialOptions {
+  extraBabelPlugins?: []
 }
 
 interface RollupOutputOptions extends OutputOptions {
@@ -71,11 +73,3 @@ export type BuildRollupConfigOutput = Omit<
   RollupOutputOptions,
   'target' | 'minify'
 >
-
-// ------------ 其他 ------------
-
-type ArgsType<T extends (...args: any[]) => any> = T extends (
-  ...args: infer U
-) => any
-  ? U
-  : never
