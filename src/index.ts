@@ -58,6 +58,7 @@ export default async function main() {
   program
     .command('test')
     .description('测试')
+    .option('--coverage', 'jest覆盖率')
     .action((options: TestCommandOptions) => {
       test(
         {

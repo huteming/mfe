@@ -38,8 +38,8 @@ export default function (opts: Opts): Config.InitialOptions {
     clearMocks: true,
 
     collectCoverageFrom: [
-      'index.{js,jsx,ts,tsx}',
-      hasSrc && '<rootDir>/src/**/*.{js,jsx,ts,tsx}',
+      '<rootDir>/index.{js,jsx,ts,tsx}',
+      '<rootDir>/src/**/*.{js,jsx,ts,tsx}',
       '!**/typings/**',
       '!**/types/**',
       '!**/fixtures/**',
