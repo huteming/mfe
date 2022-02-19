@@ -49,7 +49,7 @@ export default function (opts: Opts): Config.InitialOptions {
     ].filter(Boolean) as string[],
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
-      '@/(.*)': '<rootDir>/src/$1',
+      '^@/(.*)': '<rootDir>/src/$1',
       // 静态资源
       // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       //   require.resolve('../static/mocks/fileMocks'),

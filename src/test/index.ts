@@ -40,6 +40,7 @@ export default async function test(
     }),
     packageJestConfig,
     produce(userJestConfig, (draft) => {
+      // 删除自定义属性
       delete draft?.extraBabelPlugins
     }),
   )
