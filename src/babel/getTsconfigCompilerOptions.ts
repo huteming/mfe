@@ -34,3 +34,16 @@ export default function getTsconfigCompilerOptions(fileName: string) {
   const config = parseTsconfig(fileName)
   return config ? config.compilerOptions : undefined
 }
+
+// const tsCompilerOptions = ((): object => {
+//   const tsconfigPath = join(cwd, 'tsconfig.json')
+//   const templateTsconfigPath = join(
+//     __dirname,
+//     '../template/default-tsconfig.json',
+//   )
+
+//   if (existsSync(tsconfigPath)) {
+//     return getTsconfigCompilerOptions(tsconfigPath) || {}
+//   }
+//   return getTsconfigCompilerOptions(templateTsconfigPath) || {}
+// })()
