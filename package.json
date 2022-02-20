@@ -9,7 +9,6 @@
   "types": "lib/index.d.ts",
   "files": [
     "lib",
-    "template",
     "static"
   ],
   "scripts": {
