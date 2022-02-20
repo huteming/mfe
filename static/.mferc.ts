@@ -1,13 +1,7 @@
-// export const babel = {
-//   output: [
-//     {
-//       dir: 'dist',
-//       format: 'esm', // 'esm' | 'cjs'
-//       target: 'browser', // "node" | "browser"
-//     },
-//   ],
-//   plugins: [],
-// }
+/**
+ * 注意
+ * 1. 类型文件都是无法识别别名的，所以源文件中类型文件只能用相对路径
+ */
 
 export const rollup = {
   input: ['src/index.ts'],
@@ -31,6 +25,17 @@ export const rollup = {
   external: [],
   extraBabelPlugins: [],
 }
+
+// export const babel = {
+//   output: [
+//     {
+//       dir: 'dist',
+//       format: 'esm', // 'esm' | 'cjs'
+//       target: 'browser', // "node" | "browser"
+//     },
+//   ],
+//   plugins: [],
+// }
 
 // export const jest = {
 //   extraBabelPlugins: [],

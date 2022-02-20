@@ -62,7 +62,22 @@ export default function build(opts: BabelOpts, options: BuildCommandOptions) {
       target,
       format,
       typescript: true,
-      plugins,
+      plugins: [
+        // https://github.com/tleunen/babel-plugin-module-resolver/blob/HEAD/DOCS.md#cwd
+        [
+          require.resolve('babel-plugin-module-resolver'),
+          {
+            // 重要: 会用于解析最后生成的相对路径
+            cwd: 'src',
+            alias: {
+              '^@/(.+)': ([, name]: string[]) => {
+                return `./${name}`
+              },
+            },
+          },
+        ],
+        ...plugins,
+      ],
     })
 
     const src = [
