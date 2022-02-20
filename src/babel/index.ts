@@ -124,8 +124,8 @@ export default function build(opts: BabelOpts, options: BuildCommandOptions) {
   return new Promise((resolve, reject) => {
     parallel(...tasks)((err: Error) => {
       if (err) {
-        console.error(err)
-        return reject(err)
+        // console.error(err.message)
+        return reject(new Error(err.message))
       }
       resolve('done')
     })
