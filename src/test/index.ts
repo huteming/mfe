@@ -21,13 +21,14 @@ import produce from 'immer'
 interface TestOpts {
   cwd: string
   userJestConfig?: UserJestConfig
+  regexForTestFiles: string[]
 }
 
 export default async function test(
   opts: TestOpts,
   options: TestCommandOptions,
 ) {
-  const { cwd, userJestConfig } = opts
+  const { cwd, userJestConfig, regexForTestFiles } = opts
 
   const packageJSONPath = join(cwd, 'package.json')
   const packageJestConfig =
@@ -63,6 +64,10 @@ export default async function test(
   try {
     await runCLI(
       {
+        // jest 命令行中的正则
+        _: regexForTestFiles || [],
+        // 2022-02-26: 暂时不知道是哪个参数
+        $0: argsConfig.$0 || '',
         // 必须是单独的 config 配置，值为 string，否则不生效
         config: JSON.stringify(config),
         ...argsConfig,

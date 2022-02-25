@@ -58,12 +58,14 @@ export default async function main() {
   program
     .command('test')
     .description('测试')
+    .argument('[regexForTestFiles...]', '正则匹配文件')
     .option('--coverage', 'jest覆盖率')
-    .action((options: TestCommandOptions) => {
+    .action((regexForTestFiles: string[], options: TestCommandOptions) => {
       test(
         {
           cwd,
           userJestConfig: userConfig.jest,
+          regexForTestFiles,
         },
         options,
       )
