@@ -54,6 +54,8 @@ export default function (opts: Opts): Config.InitialOptions {
       // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       //   require.resolve('../static/mocks/fileMocks'),
       '\\.(css|less|sass|scss|stylus)$': require.resolve('identity-obj-proxy'),
+      // webpack inline loader
+      '^file-loader': require.resolve('../static/mocks/fileMocks'),
     },
     setupFiles: [require.resolve('../static/helpers/setupFiles/shim')],
     setupFilesAfterEnv: [
