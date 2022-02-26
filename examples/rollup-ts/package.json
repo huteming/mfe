@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "build": "node ../../bin/mfe.js build --clean --stats"
+    "build": "node ../../bin/mfe.js build --clean"
   }
 }

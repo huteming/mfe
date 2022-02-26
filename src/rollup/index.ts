@@ -24,17 +24,15 @@ function transformRollupConfig(
   userConfig: UserRollupConfig,
 ): TransformedRollupConfig[] {
   const { input, output, plugins = [], extraBabelPlugins = [] } = userConfig
-  return input.flatMap((inp) => {
-    return output.map((out) => {
-      return {
-        input: join(cwd, inp),
-        output: produce(out, (draft) => {
-          draft.file = join(cwd, draft.file)
-        }),
-        plugins,
-        extraBabelPlugins,
-      }
-    })
+  return output.map((out) => {
+    return {
+      input: join(cwd, input),
+      output: produce(out, (draft) => {
+        draft.file = join(cwd, draft.file)
+      }),
+      plugins,
+      extraBabelPlugins,
+    }
   })
 }
 
