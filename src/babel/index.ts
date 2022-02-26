@@ -12,6 +12,8 @@ import gulpTs from 'gulp-typescript'
 import babel from 'gulp-babel'
 import del from 'del'
 import { series, parallel } from 'bach'
+import parseTsCompilerOptions from '@/utils/parseTsCompilerOptions'
+import produce from 'immer'
 
 interface BabelOpts {
   cwd: string
@@ -50,6 +52,37 @@ const createTsProject = (cwd: string) => {
   })
 }
 
+const getResolverAlias = (cwd: string) => {
+  const resolver: { cwd: string; alias: Record<string, any> } = {
+    // 重要: 会用于解析最后生成的相对路径
+    cwd: 'src',
+    alias: {
+      '^@/(.+)': ([, name]: string[]) => {
+        return `./${name}`
+      },
+    },
+  }
+  const compilerOptions = parseTsCompilerOptions(cwd)
+  if (!compilerOptions || !compilerOptions.paths) {
+    return resolver
+  }
+  const { paths } = compilerOptions
+  // "paths": {
+  //   "*": ["types/*"],
+  //   "@/*": ["src/*"]
+  // },
+  return Object.entries(paths).reduce((editResolver, [key, values]) => {
+    const alias = key.replace('/*', '/')
+    const resolved = values[0].replace('src', '.').replace('/*', '')
+
+    return produce(editResolver, (draft) => {
+      draft.alias[`^${alias}(.+)`] = ([, name]: string[]) => {
+        return `./${resolved}/${name}`
+      }
+    })
+  }, resolver)
+}
+
 export default function build(opts: BabelOpts, options: BuildCommandOptions) {
   const { cwd, userBabelConfig } = opts
   const babelConfigs = transformBabelConfig(cwd, userBabelConfig)
@@ -67,13 +100,7 @@ export default function build(opts: BabelOpts, options: BuildCommandOptions) {
         [
           require.resolve('babel-plugin-module-resolver'),
           {
-            // 重要: 会用于解析最后生成的相对路径
-            cwd: 'src',
-            alias: {
-              '^@/(.+)': ([, name]: string[]) => {
-                return `./${name}`
-              },
-            },
+            ...getResolverAlias(cwd),
           },
         ],
         ...plugins,
