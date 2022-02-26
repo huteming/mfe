@@ -7,6 +7,7 @@ import registerBabel from './utils/registerBabel'
 import { existsSync, readFileSync, statSync } from 'fs'
 import { join, extname, relative } from 'path'
 import test from './test'
+import mferc from './mferc'
 
 export default async function main() {
   const program = new Command()
@@ -69,6 +70,15 @@ export default async function main() {
         },
         options,
       )
+    })
+
+  program
+    .command('mferc')
+    .description('生成配置文件')
+    .action(() => {
+      mferc({
+        cwd,
+      })
     })
 
   await program.parseAsync(process.argv)
