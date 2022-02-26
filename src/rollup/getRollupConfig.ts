@@ -23,6 +23,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import getBabelConfig from '@/utils/getBabelConfig'
 import produce from 'immer'
 import { existsSync, readFileSync, statSync } from 'fs'
+import type { Plugin } from 'rollup'
 
 interface IGetRollupConfigOpts {
   cwd: string
@@ -52,6 +53,23 @@ function testExternal(external: string[], excludes: string[]) {
     }
     return external.includes(getPkgNameByid(id))
   }
+}
+
+function mergePlugins(
+  defaultPlugins: Plugin[],
+  extraPlugins: Plugin[],
+  cannotOverridePlugins: Plugin[],
+): Plugin[] {
+  const sortedPlugins = [
+    ...defaultPlugins,
+    ...extraPlugins,
+    ...cannotOverridePlugins,
+  ]
+  const pluginsMap: Record<string, Plugin> = sortedPlugins.reduce(
+    (r, plugin) => ({ ...r, [plugin.name]: plugin }),
+    {},
+  )
+  return Object.values(pluginsMap)
 }
 
 export default function (
@@ -119,7 +137,7 @@ export default function (
     }
   }
 
-  const plugins = [
+  const defaultPlugins: Plugin[] = [
     replace({
       values: {
         'process.env.NODE_ENV': JSON.stringify('production'),
@@ -168,7 +186,6 @@ export default function (
           // ref: https://github.com/rollup/rollup-plugin-babel#usage
           extensions,
         }),
-    ...extraRollupPlugins,
     ...(format === 'umd' ? extraUmdPlugins : []),
     ...(minify
       ? [
@@ -181,6 +198,9 @@ export default function (
           }),
         ]
       : []),
+  ]
+  // 有些插件必须放在最后，所以不能覆盖
+  const cannotOverridePlugins: Plugin[] = [
     // https://github.com/btd/rollup-plugin-visualizer
     ...(options.stats
       ? [
@@ -202,7 +222,11 @@ export default function (
   return {
     input,
     output: buildOutput,
-    plugins,
+    plugins: mergePlugins(
+      defaultPlugins,
+      extraRollupPlugins,
+      cannotOverridePlugins,
+    ),
     external: testExternal(format === 'umd' ? externalPeerDeps : external, []),
   }
 }
