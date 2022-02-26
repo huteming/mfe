@@ -8,6 +8,7 @@ import { existsSync, readFileSync, statSync } from 'fs'
 import { join, extname, relative } from 'path'
 import test from './test'
 import mferc from './mferc'
+import template, { TemplateFileType } from './template'
 
 export default async function main() {
   const program = new Command()
@@ -78,6 +79,16 @@ export default async function main() {
     .action(() => {
       mferc({
         cwd,
+      })
+    })
+
+  program
+    .command('template')
+    .argument('<type>', '生成模版文件')
+    .action((type: TemplateFileType) => {
+      template({
+        cwd,
+        type,
       })
     })
 
