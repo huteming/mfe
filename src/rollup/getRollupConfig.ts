@@ -36,14 +36,19 @@ interface IPkg {
   name?: string
 }
 
+// @ant-design/icons
+// antd
+// file-loader!ace-builds
 function getPkgNameByid(id: string) {
+  // 行内的 webpack-loader
+  id = id.replace(/^file-loader!/, '')
+
   const splitted = id.split('/')
   // @ 和 @tmp 是为了兼容 umi 的逻辑
   if (id.charAt(0) === '@' && splitted[0] !== '@' && splitted[0] !== '@tmp') {
     return splitted.slice(0, 2).join('/')
-  } else {
-    return id.split('/')[0]
   }
+  return id.split('/')[0]
 }
 
 function testExternal(external: string[], excludes: string[]) {
