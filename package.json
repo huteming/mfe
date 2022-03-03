@@ -44,7 +44,7 @@
     "@swc/core": "^1.2.141",
     "@swc/jest": "^0.2.17",
     "@types/enzyme": "^3.10.11",
-    "@types/jest": "16.x",
+    "@types/jest": "26.x",
     "@types/react": "16.x",
     "@types/react-dom": "16.x",
     "autoprefixer": "^10.4.2",
