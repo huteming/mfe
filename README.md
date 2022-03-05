@@ -1,5 +1,20 @@
 # `@cfe/bigdata-mfe`
 
+## 2022-02-27
+
+解析 tsconfig 配置, 主要难点在于如何处理 tsconfig 中的 extends
+
+### typescript 原生方法说明
+
+1. `ts.readConfigFile`: 读取 配置文件，不会自动解析 extends，注意返回的不是 ts.CompilerOptions 类型的，只是普通的 js 对象
+2. `ts.convertCompilerOptionsFromJson`: 将 js 对象转为 ts.CompilerOptions 类型
+3. `ts.parseJsonConfigFileContent`：好像可以自动转换 extends，且返回的是 ts.CompilerOptions 类型的对象
+
+### 相关链接
+
+1. https://stackoverflow.com/questions/67956755/how-to-compile-tsconfig-json-into-a-config-object-using-typescript-api
+2. https://stackoverflow.com/questions/53804566/how-to-get-compileroptions-from-tsconfig-json/53898219#53898219
+
 ## 2022-02-26
 
 ### build
@@ -12,6 +27,31 @@
 
 因为 mfe 中引用 enzyme 并配置了 react 适配器，此时如果项目中要引用 enzyme，势必引用的就不是同一个包，所以在执行测试时会报错:
 
-```
+```bash
   Enzyme Internal Error: Enzyme expects an adapter to be configured, but found none.
 ```
+
+## 2022-02-20
+
+babel 是否有可能支持别名，注意生成的类型文件也要支持别名?
+
+- babel 可以支持别名: https://www.npmjs.com/package/babel-plugin-module-resolver
+- 但是 .d.ts 类型文件无法支持。官方有讨论: https://github.com/microsoft/TypeScript/issues/45862
+- 其他也有一些类型文件方案，但是看着并不是很友好:
+  1. https://stackoverflow.com/questions/59179787/tsc-doesnt-compile-alias-paths
+  2. https://www.npmjs.com/package/tsconfig-paths
+
+## 别名问题总结
+
+- 一共有几个地方需要别名
+  1. 开发环境的 ts 类型提示
+  2. 打包环境，各种编译编译工具
+  3. 测试环境
+- tsc 编译时可能是会自动识别 tsconfig.json 中的 paths（有待继续研究）
+- 其他工具尽可能都是利用 tsconfig.json 中的 paths 配置
+
+别名相关插件
+
+1. https://github.com/tleunen/babel-plugin-module-resolver
+2. https://www.npmjs.com/package/@rollup/plugin-alias
+3. https://github.com/dividab/tsconfig-paths-webpack-plugin

@@ -10,47 +10,53 @@ import test from './test'
 import mferc from './mferc'
 import template, { TemplateFileType } from './template'
 
+function getUserFile(cwd: string, filename?: string): string {
+  const userFile = join(cwd, filename || '.mferc.ts')
+  if (existsSync(userFile)) {
+    return userFile
+  }
+  return join(__dirname, '../static/.mferc.ts')
+}
+
+function loadUserConfig(cwd: string, filename?: string): UserConfig {
+  const userFile = getUserFile(cwd, filename)
+  // 解析配置文件语法
+  registerBabel(userFile)
+
+  return require(userFile)
+}
+
 export default async function main() {
   const program = new Command()
   program.version(version)
-
   // 根路径
   const cwd = process.cwd()
-  // 配置文件路径
-  const configFile = (() => {
-    const userFile = join(cwd, '.mferc.ts')
-    const defaultFile = join(__dirname, '../static/.mferc.ts')
-    if (existsSync(userFile)) {
-      return userFile
-    }
-    return defaultFile
-  })()
-  // 解析配置文件语法
-  registerBabel(configFile)
-  const userConfig: UserConfig = require(configFile)
 
   program
     .command('build')
     .description('构建')
     .option('--clean', '清除目录文件夹')
     .option('--stats', '生成构建分析文件')
+    .option('--config <config>', '自定义配置文件')
     .action((options: BuildCommandOptions) => {
+      const { babel: userBabelConfig, rollup: userRollupConfig } =
+        loadUserConfig(cwd, options.config)
       // babel 编译
-      if (userConfig.babel) {
+      if (userBabelConfig) {
         babel(
           {
             cwd,
-            userBabelConfig: userConfig.babel,
+            userBabelConfig,
           },
           options,
         )
       }
       // rollup 打包
-      if (userConfig.rollup) {
+      if (userRollupConfig) {
         rollup(
           {
             cwd,
-            userRollupConfig: userConfig.rollup,
+            userRollupConfig,
           },
           options,
         )
@@ -63,10 +69,11 @@ export default async function main() {
     .argument('[regexForTestFiles...]', '正则匹配文件')
     .option('--coverage', 'jest覆盖率')
     .action((regexForTestFiles: string[], options: TestCommandOptions) => {
+      const { jest: userJestConfig } = loadUserConfig(cwd)
       test(
         {
           cwd,
-          userJestConfig: userConfig.jest,
+          userJestConfig,
           regexForTestFiles,
         },
         options,
