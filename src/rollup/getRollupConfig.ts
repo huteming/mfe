@@ -77,7 +77,7 @@ function mergePlugins(
   return Object.values(pluginsMap)
 }
 
-export default function (
+export default function getRollupConfig(
   opts: IGetRollupConfigOpts,
   options: BuildCommandOptions,
 ): BuildRollupConfig {
@@ -88,7 +88,7 @@ export default function (
     plugins: extraRollupPlugins,
     extraBabelPlugins,
   } = rollupConfig
-  const { target, format, minify } = output
+  const { target = 'browser', format, minify } = output
   const entryExt = extname(input)
   const isTypeScript = entryExt === '.ts' || entryExt === '.tsx'
   const extensions = ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs']
@@ -112,7 +112,7 @@ export default function (
 
   const babelConfig = getBabelConfig({
     format,
-    target: target || 'browser',
+    target,
     typescript: true,
     plugins: extraBabelPlugins,
   })

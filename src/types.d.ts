@@ -30,7 +30,7 @@ export interface TransformedBabelConfig {
 interface IBabelOutputOptions {
   dir: string
   format: ModuleFormat
-  target: 'node' | 'browser'
+  target?: 'node' | 'browser'
 }
 
 // ------------ rollup ------------
@@ -63,7 +63,7 @@ export type BuildRollupConfigOutput = Omit<
 interface RollupOutputOptions extends OutputOptions {
   file: string
   format: ModuleFormat
-  target: 'node' | 'browser'
+  target?: 'node' | 'browser'
   minify?: boolean
 }
 

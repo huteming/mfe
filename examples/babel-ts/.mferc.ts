@@ -3,12 +3,10 @@ export const babel = {
     {
       dir: 'dist',
       format: 'esm', // 'esm' | 'cjs'
-      target: 'browser', // "node" | "browser"
     },
     {
       dir: 'lib',
       format: 'cjs', // 'esm' | 'cjs'
-      target: 'browser', // "node" | "browser"
     },
   ],
 }

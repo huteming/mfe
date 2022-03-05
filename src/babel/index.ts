@@ -89,7 +89,7 @@ export default function build(opts: BabelOpts, options: BuildCommandOptions) {
 
   const tasks = babelConfigs.map((babelConfig) => {
     const { output, plugins } = babelConfig
-    const { dir, target, format } = output
+    const { dir, target = 'browser', format } = output
 
     const babelOpts = getBabelConfig({
       target,
