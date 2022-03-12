@@ -13,6 +13,9 @@ module.exports = babelJest.createTransformer({
     require.resolve('@babel/preset-react'),
     require.resolve('@babel/preset-typescript'),
   ],
+  // plugins: [
+  //   require.resolve('@babel/plugin-proposal-optional-chaining'),
+  // ],
   babelrc: false,
   configFile: false,
 })
