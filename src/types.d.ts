@@ -71,4 +71,6 @@ interface RollupOutputOptions extends OutputOptions {
 
 export interface UserJestConfig extends Config.InitialOptions {
   extraBabelPlugins?: []
+  // 同 setupFiles，用作合并，而不是覆盖
+  _setupFiles?: Config.InitialOptions['setupFiles']
 }

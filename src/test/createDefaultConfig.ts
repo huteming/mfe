@@ -10,7 +10,7 @@ interface Opts {
 
 export default function (opts: Opts): Config.InitialOptions {
   const { cwd, userJestConfig } = opts
-  const { extraBabelPlugins } = userJestConfig || {}
+  const { extraBabelPlugins, _setupFiles = [] } = userJestConfig || {}
   const testMatchTypes = ['spec', 'test']
   const src = join(cwd, 'src')
   const hasSrc = existsSync(src)
@@ -57,7 +57,10 @@ export default function (opts: Opts): Config.InitialOptions {
       // webpack inline loader
       '^file-loader': require.resolve('../static/mocks/fileMocks'),
     },
-    setupFiles: [require.resolve('../static/helpers/setupFiles/shim')],
+    setupFiles: [
+      require.resolve('../static/helpers/setupFiles/shim'),
+      ..._setupFiles,
+    ],
     setupFilesAfterEnv: [
       require.resolve('../static/helpers/setupFiles/jasmine'),
     ],

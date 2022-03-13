@@ -10,7 +10,6 @@
  *    相关链接: https://www.babeljs.cn/docs/config-files#jest
  */
 import { runCLI } from 'jest'
-import mergeConfig from '@/utils/mergeConfig'
 import createDefaultConfig from './createDefaultConfig'
 import { existsSync } from 'fs'
 import { join } from 'path'
@@ -30,21 +29,17 @@ export default async function test(
 ) {
   const { cwd, userJestConfig, regexForTestFiles } = opts
 
-  const packageJSONPath = join(cwd, 'package.json')
-  const packageJestConfig =
-    existsSync(packageJSONPath) && require(packageJSONPath).jest
-
-  const config = mergeConfig(
-    createDefaultConfig({
+  const jestConfig = {
+    ...createDefaultConfig({
       cwd,
       userJestConfig,
     }),
-    packageJestConfig,
-    produce(userJestConfig, (draft) => {
+    ...produce(userJestConfig, (draft) => {
       // 删除自定义属性
       delete draft?.extraBabelPlugins
+      delete draft?._setupFiles
     }),
-  )
+  }
 
   // cliOptions 包含 jest 所有的配置属性
   // 这里是获取命令行中 jest 的配置
@@ -69,7 +64,7 @@ export default async function test(
         // 2022-02-26: 暂时不知道是哪个参数
         $0: argsConfig.$0 || '',
         // 必须是单独的 config 配置，值为 string，否则不生效
-        config: JSON.stringify(config),
+        config: JSON.stringify(jestConfig),
         ...argsConfig,
       },
       [cwd],
