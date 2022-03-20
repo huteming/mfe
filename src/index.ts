@@ -2,13 +2,19 @@ import { Command } from 'commander'
 import { version } from '../package.json'
 import babel from './babel'
 import rollup from './rollup'
-import { BuildCommandOptions, TestCommandOptions, UserConfig } from './types'
+import {
+  BuildCommandOptions,
+  CodeStyleCommandOptions,
+  TestCommandOptions,
+  UserConfig,
+} from './types'
 import registerBabel from './utils/registerBabel'
 import { existsSync, readFileSync, statSync } from 'fs'
 import { join, extname, relative } from 'path'
 import test from './test'
 import mferc from './mferc'
 import template, { TemplateFileType } from './template'
+import initCodeStyle from './code-style'
 
 function getUserFile(cwd: string, filename?: string): string {
   const userFile = join(cwd, filename || '.mferc.ts')
@@ -78,6 +84,17 @@ export default async function main() {
         },
         options,
       )
+    })
+
+  program
+    .command('code-style')
+    .description('eslint, prettier 等代码格式配置')
+    .option('-ts, --typescript', 'ts类型')
+    .action((options: CodeStyleCommandOptions) => {
+      initCodeStyle({
+        cwd,
+        options,
+      })
     })
 
   program

@@ -1,6 +1,14 @@
 import { RollupOptions, OutputOptions, ModuleFormat } from 'rollup'
 import type { Config } from '@jest/types'
 
+export interface UserConfig {
+  babel?: UserBabelConfig
+  rollup?: UserRollupConfig
+  jest?: UserJestConfig
+}
+
+// ------------ command ------------
+
 export interface BuildCommandOptions {
   config?: string
   clean?: boolean
@@ -9,10 +17,8 @@ export interface BuildCommandOptions {
 
 export interface TestCommandOptions extends Config.Argv {}
 
-export interface UserConfig {
-  babel?: UserBabelConfig
-  rollup?: UserRollupConfig
-  jest?: UserJestConfig
+export interface CodeStyleCommandOptions {
+  typescript?: boolean
 }
 
 // ------------ babel ------------
