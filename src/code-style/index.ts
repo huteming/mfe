@@ -11,14 +11,13 @@ function sortByKey(a: any, b: any) {
   return a.key > b.key ? 1 : -1
 }
 
-async function writeJSConfigFile(cwd: string, config: Object) {
-  const filePath = `./.eslintrc.js`
-  const stringifiedContent = `module.exports = ${stringify(config, {
-    cmp: sortByKey,
-    space: 4,
-  })}\n`
-
-  writeFileSync(filePath, stringifiedContent, 'utf8')
+async function writeJSConfigFile(
+  cwd: string,
+  filename: string,
+  content: string,
+) {
+  const filePath = `./${filename}`
+  writeFileSync(filePath, content, 'utf8')
 
   const eslintBin = join(cwd, './node_modules/.bin/eslint')
   const result = spawn.sync(eslintBin, ['--fix', '--quiet', filePath], {
@@ -26,17 +25,25 @@ async function writeJSConfigFile(cwd: string, config: Object) {
   })
 
   if (result.error || result.status !== 0) {
-    console.warn('eslint 配置文件已生成, 但该文件格式化失败')
+    console.warn(`${filename} 配置文件已生成, 但该文件格式化失败`)
+    console.warn(result.error?.message)
   }
 }
 
-function processOptions(options: CodeStyleCommandOptions) {
+/**
+ * 获取 eslint 配置对象
+ */
+function getEslintConfig(options: CodeStyleCommandOptions) {
   const config: any = {
     env: {
       browser: true,
       es2021: true,
     },
-    extends: ['plugin:react/recommended', 'airbnb'],
+    extends: [
+      'plugin:react/recommended',
+      'airbnb',
+      'plugin:prettier/recommended',
+    ],
     parserOptions: {
       ecmaFeatures: {
         jsx: true,
@@ -55,6 +62,34 @@ function processOptions(options: CodeStyleCommandOptions) {
   }
 
   return config
+}
+
+/**
+ * 获取 prettier 配置对象
+ */
+function getPrettierConfig() {
+  return {
+    semi: false,
+    singleQuote: true,
+    trailingComma: 'all',
+    printWidth: 180,
+    proseWrap: 'never',
+    endOfLine: 'lf',
+    overrides: [
+      {
+        files: '.prettierrc',
+        options: {
+          parser: 'json',
+        },
+      },
+      {
+        files: 'document.ejs',
+        options: {
+          parser: 'html',
+        },
+      },
+    ],
+  }
 }
 
 function installSyncSaveDev(packages: string[] | string) {
@@ -104,7 +139,10 @@ function getPeerDependencies(moduleName: string) {
 }
 getPeerDependencies.cache = new Map()
 
-function getModulesList(config: any) {
+/**
+ * 解析 eslint 配置依赖的模块
+ */
+function getEslintDependModules(config: any): string[] {
   const modules: any = {
     // eslint: 'latest',
   }
@@ -146,6 +184,18 @@ function getModulesList(config: any) {
   return Object.keys(modules).map((name) => `${name}@${modules[name]}`)
 }
 
+/**
+ * 解析 prettier 配置依赖的模块
+ */
+function getPrettierDependModules(): string[] {
+  const modules: any = {
+    prettier: 'latest',
+    'eslint-config-prettier': 'latest',
+    'eslint-plugin-prettier': 'latest',
+  }
+  return Object.keys(modules).map((name) => `${name}@${modules[name]}`)
+}
+
 interface InitCodeStyleOpts {
   cwd: string
   options: CodeStyleCommandOptions
@@ -154,8 +204,30 @@ interface InitCodeStyleOpts {
 export default function initCodeStyle(opts: InitCodeStyleOpts) {
   const { cwd, options } = opts
 
-  const config = processOptions(options)
-  const modules = getModulesList(config)
-  installSyncSaveDev(modules)
-  writeJSConfigFile(cwd, config)
+  const eslintConfig = getEslintConfig(options)
+  const eslintDependModules = getEslintDependModules(eslintConfig)
+
+  const prettierConfig = getPrettierConfig()
+  const prettierDependModules = getPrettierDependModules()
+
+  installSyncSaveDev([...eslintDependModules, ...prettierDependModules])
+
+  const files = [
+    {
+      filename: '.eslintrc.js',
+      content: `module.exports = ${stringify(eslintConfig, {
+        cmp: sortByKey,
+        space: 2,
+      })}\n`,
+    },
+    {
+      filename: '.prettierrc',
+      content: `${stringify(prettierConfig, {
+        space: 2,
+      })}\n`,
+    },
+  ]
+  files.forEach(({ filename, content }) => {
+    writeJSConfigFile(cwd, filename, content)
+  })
 }
