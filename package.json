@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "preinstall": "npx only-allow yarn",
     "prepare": "husky install"
   },
   "bin": {
