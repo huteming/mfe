@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "release": "node scripts/release.js --skipTests",
     "preinstall": "npx only-allow yarn",
     "prepare": "husky install"
   },
@@ -90,7 +91,12 @@
     "@types/cross-spawn": "^6.0.2",
     "@types/gulp": "^4.0.9",
     "@types/gulp-if": "^0.0.34",
-    "husky": "^7.0.4"
+    "chalk": "4.x",
+    "enquirer": "^2.3.6",
+    "execa": "4.x",
+    "husky": "^7.0.4",
+    "minimist": "^1.2.6",
+    "semver": "^7.3.5"
   },
   "resolutions": {
     "@types/react": "16.x"
