@@ -36,19 +36,25 @@ function transformBabelConfig(
 const createTsProject = (cwd: string) => {
   const userTsconfig = join(cwd, 'tsconfig.json')
   const mustOverwriteOptions = {
+    noEmit: false,
     declaration: true,
     emitDeclarationOnly: true,
+    // 2022-04-07: 该配置导致不输出类型文件，暂不知道原因
+    isolatedModules: false,
   }
+
+  // 用户的 tsconfig.json 文件
   if (existsSync(userTsconfig)) {
     return gulpTs.createProject(userTsconfig, mustOverwriteOptions)
   }
+
   return gulpTs.createProject({
-    ...mustOverwriteOptions,
     allowSyntheticDefaultImports: true,
     module: 'esnext',
     target: 'esnext',
     moduleResolution: 'node',
     jsx: 'react',
+    ...mustOverwriteOptions,
   })
 }
 
