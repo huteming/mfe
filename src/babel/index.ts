@@ -121,7 +121,12 @@ export default function build(opts: BabelOpts, options: BuildCommandOptions) {
       `!src/**/__tests__{,/**}`,
       `!src/**/*.mdx`,
       `!src/**/*.md`,
+      // 测试文件
       `!src/**/*.+(test|e2e|spec).+(js|jsx|ts|tsx)`,
+      // storybook
+      '!src/**/*.stories.mdx',
+      '!src/**/*.stories.+(js|jsx|ts|tsx)',
+      // tsconfig.json
       `!src/**/tsconfig{,.*}.json`,
     ]
     const srcOptions = {
