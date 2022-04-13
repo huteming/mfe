@@ -2,6 +2,23 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 import type { Config } from '@jest/types'
 import { UserJestConfig } from '@/types'
+import getResolverAlias from '@/utils/getResolverAlias'
+import produce from 'immer'
+
+const getAliasFromTsConfig = (cwd: string) => {
+  const resolver = getResolverAlias(cwd)
+  if (!resolver) {
+    return {
+      '^@/(.*)': '<rootDir>/src/$1',
+    }
+  }
+  const alias: Record<string, string> = {}
+  return Object.entries(resolver).reduce((edit, [key, value]) => {
+    return produce(edit, (draft) => {
+      draft[`^${key}/(.*)`] = `<rootDir>/${value}/$1`
+    })
+  }, alias)
+}
 
 interface Opts {
   cwd: string
@@ -49,7 +66,7 @@ export default function (opts: Opts): Config.InitialOptions {
     ].filter(Boolean) as string[],
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     moduleNameMapper: {
-      '^@/(.*)': '<rootDir>/src/$1',
+      ...getAliasFromTsConfig(cwd),
       // 静态资源
       // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       //   require.resolve('../static/mocks/fileMocks'),

@@ -58,6 +58,7 @@ const createTsProject = (cwd: string) => {
   })
 }
 
+// TODO: 基于 utils/getResolverAlias 做转换
 const getResolverAlias = (cwd: string) => {
   const resolver: { cwd: string; alias: Record<string, any> } = {
     // 重要: 会用于解析最后生成的相对路径

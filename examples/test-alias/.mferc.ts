@@ -1,6 +1,6 @@
 export const jest = {
-  moduleNameMapper: {
-    '^@/(.*)': '<rootDir>/src/$1',
-    '^utils/(.*)': '<rootDir>/utils/$1',
-  },
+  // moduleNameMapper: {
+  //   '^@/(.*)': '<rootDir>/src/$1',
+  //   '^utils/(.*)': '<rootDir>/utils/$1',
+  // },
 }
