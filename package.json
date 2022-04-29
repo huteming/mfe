@@ -14,7 +14,6 @@
   "scripts": {
     "build": "rollup -c",
     "release": "node scripts/release.js --skipTests",
-    "preinstall": "npx only-allow yarn",
     "prepare": "husky install"
   },
   "bin": {
