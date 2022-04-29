@@ -41,36 +41,35 @@ interface IBabelOutputOptions {
 
 // ------------ rollup ------------
 
-export interface UserRollupConfig extends RollupOptions {
-  input: string
-  output: RollupOutputOptions[]
-  plugins?: any[]
-  extraBabelPlugins?: any[]
+// 这是自定义的输出配置对象
+export interface IRollupOutputOptions extends OutputOptions {
+  file: string
+  format: ModuleFormat
+
+  // 自定义新增, 需要手动删除
+  target?: 'node' | 'browser'
+  minify?: boolean
 }
 
-export interface TransformedRollupConfig extends RollupOptions {
+interface IRollupOptions extends RollupOptions {
+  plugins?: any[]
+  extraBabelPlugins?: any[]
+  externalsExclude?: any[]
+}
+
+export interface UserRollupConfig extends IRollupOptions {
   input: string
-  output: RollupOutputOptions
-  plugins: any[]
-  extraBabelPlugins: any[]
+  output: IRollupOutputOptions[]
+}
+
+export interface TransformedRollupConfig extends IRollupOptions {
+  input: string
+  output: IRollupOutputOptions
 }
 
 export interface BuildRollupConfig extends RollupOptions {
   input: string
-  output: BuildRollupConfigOutput
-  plugins: any[]
-}
-
-export type BuildRollupConfigOutput = Omit<
-  RollupOutputOptions,
-  'target' | 'minify'
->
-
-interface RollupOutputOptions extends OutputOptions {
-  file: string
-  format: ModuleFormat
-  target?: 'node' | 'browser'
-  minify?: boolean
+  output: IRollupOutputOptions
 }
 
 // ------------ jest ------------

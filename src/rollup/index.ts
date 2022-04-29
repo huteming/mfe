@@ -2,7 +2,6 @@ import { rollup } from 'rollup'
 import getRollupConfig from './getRollupConfig'
 import {
   BuildCommandOptions,
-  BuildRollupConfigOutput,
   TransformedRollupConfig,
   UserRollupConfig,
 } from '../types'
@@ -23,15 +22,14 @@ function transformRollupConfig(
   cwd: string,
   userConfig: UserRollupConfig,
 ): TransformedRollupConfig[] {
-  const { input, output, plugins = [], extraBabelPlugins = [] } = userConfig
+  const { input, output, ...rest } = userConfig
   return output.map((out) => {
     return {
       input: join(cwd, input),
       output: produce(out, (draft) => {
         draft.file = join(cwd, draft.file)
       }),
-      plugins,
-      extraBabelPlugins,
+      ...rest,
     }
   })
 }

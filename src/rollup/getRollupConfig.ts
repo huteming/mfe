@@ -2,8 +2,6 @@ import { extname, join } from 'path'
 import {
   BuildCommandOptions,
   BuildRollupConfig,
-  BuildRollupConfigOutput,
-  RollupOutputOptions,
   TransformedRollupConfig,
 } from '../types'
 import { CompilerOptions, ScriptTarget } from 'typescript'
@@ -85,8 +83,9 @@ export default function getRollupConfig(
   const {
     input,
     output,
-    plugins: extraRollupPlugins,
+    plugins: extraRollupPlugins = [],
     extraBabelPlugins,
+    externalsExclude = [],
   } = rollupConfig
   const { target = 'browser', format, minify } = output
   const entryExt = extname(input)
@@ -216,22 +215,26 @@ export default function getRollupConfig(
       : []),
   ]
 
-  const buildOutput: BuildRollupConfigOutput = produce(
-    output,
-    (draft: Partial<RollupOutputOptions>) => {
-      delete draft.target
-      delete draft.minify
-    },
-  )
-
   return {
     input,
-    output: buildOutput,
+    output: produce(output, (draft) => {
+      delete draft.target
+      delete draft.minify
+    }),
     plugins: mergePlugins(
       defaultPlugins,
       extraRollupPlugins,
       cannotOverridePlugins,
     ),
-    external: testExternal(format === 'umd' ? externalPeerDeps : external, []),
+    external: testExternal(
+      format === 'umd' ? externalPeerDeps : external,
+      externalsExclude,
+    ),
+    // fix warn: The 'this' keyword is equivalent to 'undefined' at the top level of an ES module, and has been rewritten
+    // https://github.com/rollup/rollup/issues/4022
+    onwarn(warning, warn) {
+      if (warning.code === 'THIS_IS_UNDEFINED') return
+      warn(warning) // this requires Rollup 0.46
+    },
   }
 }
