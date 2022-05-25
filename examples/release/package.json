@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "release": "node ../../bin/mfe.js release --dry",
+    "test": "console.log('test')",
+    "build": "console.log('build')"
+  },
+  "version": "0.3.1"
+}

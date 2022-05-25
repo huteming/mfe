@@ -5,6 +5,7 @@ import rollup from './rollup'
 import {
   BuildCommandOptions,
   CodeStyleCommandOptions,
+  ReleaseCommandOptions,
   TestCommandOptions,
   UserConfig,
 } from './types'
@@ -15,6 +16,7 @@ import test from './test'
 import mferc from './mferc'
 import template, { TemplateFileType } from './template'
 import initCodeStyle from './code-style'
+import release from './release'
 
 function getUserFile(cwd: string, filename?: string): string {
   const userFile = join(cwd, filename || '.mferc.ts')
@@ -84,6 +86,19 @@ export default async function main() {
         },
         options,
       )
+    })
+
+  program
+    .command('release')
+    .description('发布')
+    .option('--dry', '测试发布')
+    .option('--skipTests', '跳过测试')
+    .option('--skipBuild', '跳过构建')
+    .action((options: ReleaseCommandOptions) => {
+      release({
+        cwd,
+        options,
+      })
     })
 
   program

@@ -17,6 +17,13 @@ export interface BuildCommandOptions {
 
 export interface TestCommandOptions extends Config.Argv {}
 
+export interface ReleaseCommandOptions {
+  dry?: boolean
+  skipTests?: boolean
+  skipBuild?: boolean
+  preid?: string
+}
+
 export interface CodeStyleCommandOptions {
   typescript?: boolean
 }
