@@ -5,7 +5,6 @@ import chalk from 'chalk'
 import semver, { ReleaseType } from 'semver'
 import { prompt } from 'enquirer'
 import execa from 'execa'
-import pkg from '../../package.json'
 import { ReleaseCommandOptions } from '@/types'
 
 function run(bin: string, args: string[], opts = {}) {
@@ -61,6 +60,12 @@ interface IReleaseOpts {
 
 export default async function release(opts: IReleaseOpts) {
   const { cwd, options } = opts
+  let pkg = { version: '1.0.0' }
+  try {
+    pkg = require(join(cwd, 'package.json'))
+  } catch (e) {
+    console.log(`\n获取 package.json 失败.`)
+  }
   const currentVersion = pkg.version
   const preIdInCurrentVersion = semver
     .prerelease(currentVersion)?.[0]
