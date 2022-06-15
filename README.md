@@ -1,70 +1,60 @@
-# `@cfe/bigdata-mfe`
+# mfe
 
-## 2022-03-06
+## Features
 
-目前来看 src 作为默认目录不太可能修改。理由是
+- ✔︎ 基于 [rollup](http://rollupjs.org/) 和 babel 的组件打包功能
+- ✔︎ 支持 TypeScript
+- ✔︎ 支持 cjs、esm 和 umd 三种格式的打包
+- ✔︎ 支持用 babel 或 rollup 打包 cjs 和 esm
+- ✔︎ 支持 css 和 less，支持开启 css modules
+- ✔︎ 支持 test
 
-1. src 是最常用的源码目录
-2. 别名也是以 src 作为根路径来解析构建后的相对路径，如果要修改，那肯定不能是自动识别，但如果是自定义，为什么不用 src？
+<!-- ## Installation
 
-babel 现在是将 src 作为默认目录。
+**未发布到 npm** -->
 
-jest test 目前也是将 src 作为默认目录。
-
-如果要修改，项目整体改动会有点大。
-
-## 2022-02-27
-
-解析 tsconfig 配置, 主要难点在于如何处理 tsconfig 中的 extends
-
-### typescript 原生方法说明
-
-1. `ts.readConfigFile`: 读取 配置文件，不会自动解析 extends，注意返回的不是 ts.CompilerOptions 类型的，只是普通的 js 对象
-2. `ts.convertCompilerOptionsFromJson`: 将 js 对象转为 ts.CompilerOptions 类型
-3. `ts.parseJsonConfigFileContent`：好像可以自动转换 extends，且返回的是 ts.CompilerOptions 类型的对象
-
-### 相关链接
-
-1. https://stackoverflow.com/questions/67956755/how-to-compile-tsconfig-json-into-a-config-object-using-typescript-api
-2. https://stackoverflow.com/questions/53804566/how-to-get-compileroptions-from-tsconfig-json/53898219#53898219
-
-## 2022-02-26
-
-### build
-
-没有把 mfe 安装在全局，然后在项目中使用的场景
-
-### test
-
-可以在普通 js/ts 中使用，但是 jsx/tsx 不行。
-
-因为 mfe 中引用 enzyme 并配置了 react 适配器，此时如果项目中要引用 enzyme，势必引用的就不是同一个包，所以在执行测试时会报错:
+## Usage
 
 ```bash
-  Enzyme Internal Error: Enzyme expects an adapter to be configured, but found none.
+# 打包代码
+$ mfe build
+
+# 发布代码到 npm
+$ mfe release
+
+# test
+$ mfe test
+$ mfe test --coverage
+
+# 生成配置文件
+$ mfe mferc
+
+# 生成 eslint + prettier 配置
+$ mfe code-style
 ```
 
-## 2022-02-20
+## Config
 
-babel 是否有可能支持别名，注意生成的类型文件也要支持别名?
+新建 `.mferc.js` 文件进行配置。
 
-- babel 可以支持别名: https://www.npmjs.com/package/babel-plugin-module-resolver
-- 但是 .d.ts 类型文件无法支持。官方有讨论: https://github.com/microsoft/TypeScript/issues/45862
-- 其他也有一些类型文件方案，但是看着并不是很友好:
-  1. https://stackoverflow.com/questions/59179787/tsc-doesnt-compile-alias-paths
-  2. https://www.npmjs.com/package/tsconfig-paths
+比如：
 
-## 别名问题总结
-
-- 一共有几个地方需要别名
-  1. 开发环境的 ts 类型提示
-  2. 打包环境，各种编译编译工具
-  3. 测试环境
-- tsc 编译时可能是会自动识别 tsconfig.json 中的 paths（有待继续研究）
-- 其他工具尽可能都是利用 tsconfig.json 中的 paths 配置
-
-别名相关插件
-
-1. https://github.com/tleunen/babel-plugin-module-resolver
-2. https://www.npmjs.com/package/@rollup/plugin-alias
-3. https://github.com/dividab/tsconfig-paths-webpack-plugin
+```js
+export const rollup = {
+  input: 'src/index.ts',
+  output: [
+    {
+      file: 'lib/index.js',
+      format: 'cjs',
+      exports: 'auto',
+    },
+    {
+      file: 'lib/index.esm.js',
+      format: 'esm',
+    },
+  ],
+  plugins: [],
+  external: [],
+  extraBabelPlugins: [],
+}
+```
