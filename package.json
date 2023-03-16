@@ -19,6 +19,7 @@
     "test": "jest",
     "build": "rollup -c",
     "release": "node scripts/release.js --skipTests",
+    "format": "prettier --write .",
     "prepare": "husky install"
   },
   "bin": {
@@ -98,12 +99,14 @@
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/cross-spawn": "^6.0.2",
     "@types/gulp": "^4.0.9",
     "@types/gulp-if": "^0.0.34",
     "@types/shelljs": "^0.8.11",
     "@umijs/utils": "^4.0.59",
     "husky": "^7.0.4",
+    "prettier": "^2.8.4",
     "shelljs": "^0.8.5"
   },
   "resolutions": {
