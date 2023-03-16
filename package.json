@@ -16,6 +16,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
+    "test": "jest",
     "build": "rollup -c",
     "release": "node scripts/release.js --skipTests",
     "prepare": "husky install"
@@ -100,7 +101,10 @@
     "@types/cross-spawn": "^6.0.2",
     "@types/gulp": "^4.0.9",
     "@types/gulp-if": "^0.0.34",
-    "husky": "^7.0.4"
+    "@types/shelljs": "^0.8.11",
+    "@umijs/utils": "^4.0.59",
+    "husky": "^7.0.4",
+    "shelljs": "^0.8.5"
   },
   "resolutions": {
     "@types/react": "16.x"
