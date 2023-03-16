@@ -100,6 +100,8 @@ export default function (opts: Opts): Config.InitialOptions {
       '^(?!.*\\.(js|jsx|ts|tsx|css|less|sass|scss|stylus|json)$)':
         require.resolve('../static/helpers/transformers/file'),
     },
+
+    // 表示是否应该在运行期间报告每个单独的测试。所有的错误在执行后也仍然会显示在底部。
     verbose: true,
     transformIgnorePatterns: [
       // 加 [^/]*? 是为了兼容 tnpm 的目录结构
