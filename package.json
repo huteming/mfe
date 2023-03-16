@@ -1,6 +1,6 @@
 {
   "name": "@hutm/footing",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "帮助构建、测试、发布 NPM 包的工具",
   "author": "huteming <teming.hu@qq.com>",
   "homepage": "",
