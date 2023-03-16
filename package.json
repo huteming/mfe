@@ -1,8 +1,8 @@
 {
-  "name": "mfe",
-  "version": "0.4.1",
-  "description": "> TODO: description",
-  "author": "huteming <549270031@qq.com>",
+  "name": "@hutm/footing",
+  "version": "0.0.0",
+  "description": "帮助构建、测试、发布 NPM 包的工具",
+  "author": "huteming <teming.hu@qq.com>",
   "homepage": "",
   "license": "ISC",
   "main": "lib/index.js",
@@ -11,6 +11,10 @@
     "lib",
     "static"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "scripts": {
     "build": "rollup -c",
     "release": "node scripts/release.js --skipTests",
