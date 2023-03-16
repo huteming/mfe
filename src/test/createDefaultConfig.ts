@@ -1,9 +1,9 @@
-import { existsSync } from 'fs'
-import { join } from 'path'
-import type { Config } from '@jest/types'
 import { UserJestConfig } from '@/types'
 import getResolverAlias from '@/utils/getResolverAlias'
+import type { Config } from '@jest/types'
+import { existsSync } from 'fs'
 import produce from 'immer'
+import { join } from 'path'
 
 const getAliasFromTsConfig = (cwd: string) => {
   const resolver = getResolverAlias(cwd)

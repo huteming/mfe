@@ -1,8 +1,8 @@
-import React from 'react'
+import Component from './antd'
 import { mount } from 'enzyme'
 import type { ReactWrapper } from 'enzyme'
+import React from 'react'
 import { act } from 'react-dom/test-utils'
-import Component from './antd'
 
 describe('react component', () => {
   let wrapper: ReactWrapper<any>

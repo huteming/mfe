@@ -1,6 +1,6 @@
-import ts from 'typescript'
 import { existsSync } from 'fs'
 import { join } from 'path'
+import ts from 'typescript'
 
 export default function parseTsCompilerOptions(
   cwd: string,

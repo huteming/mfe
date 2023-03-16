@@ -1,6 +1,6 @@
+import aa from '@/aa/aa'
 import type { Args } from '@/types'
 import utils from '@/utils'
-import aa from '@/aa/aa'
 import bb from 'bb/bb'
 
 export default (s: Args) => {

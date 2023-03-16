@@ -1,11 +1,11 @@
-import minimist from 'minimist'
-import fs from 'fs'
-import { join, resolve } from 'path'
+import { ReleaseCommandOptions } from '@/types'
 import chalk from 'chalk'
-import semver, { ReleaseType } from 'semver'
 import { prompt } from 'enquirer'
 import execa from 'execa'
-import { ReleaseCommandOptions } from '@/types'
+import fs from 'fs'
+import minimist from 'minimist'
+import { join, resolve } from 'path'
+import semver, { ReleaseType } from 'semver'
 
 function run(bin: string, args: string[], opts = {}) {
   return execa(bin, args, { stdio: 'inherit', ...opts })

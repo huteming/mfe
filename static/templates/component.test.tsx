@@ -1,6 +1,6 @@
-import React from 'react'
 import { mount } from 'enzyme'
 import type { ReactWrapper } from 'enzyme'
+import React from 'react'
 import { act } from 'react-dom/test-utils'
 
 const Component: React.FC = () => {

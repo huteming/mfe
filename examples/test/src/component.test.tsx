@@ -1,15 +1,15 @@
-import React from 'react'
+import Component from './component'
 import { mount } from 'enzyme'
 import type { ReactWrapper } from 'enzyme'
+import React from 'react'
 import { act } from 'react-dom/test-utils'
-import Component from './component'
 
 describe('react component', () => {
   let wrapper: ReactWrapper<any>
 
   test('allows us to set props', async () => {
     await act(async () => {
-      wrapper = mount(<Component bar='baz' />)
+      wrapper = mount(<Component bar="baz" />)
     })
     wrapper.update()
 

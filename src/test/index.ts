@@ -9,13 +9,13 @@
  * 3. babel-jest 26 => 27 用法有改动
  *    相关链接: https://www.babeljs.cn/docs/config-files#jest
  */
-import { runCLI } from 'jest'
 import createDefaultConfig from './createDefaultConfig'
-import { existsSync } from 'fs'
-import { join } from 'path'
-import { options as cliOptions } from 'jest-cli/build/cli/args'
 import { TestCommandOptions, UserJestConfig } from '@/types'
+import { existsSync } from 'fs'
 import produce from 'immer'
+import { runCLI } from 'jest'
+import { options as cliOptions } from 'jest-cli/build/cli/args'
+import { join } from 'path'
 
 interface TestOpts {
   cwd: string

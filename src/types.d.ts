@@ -1,5 +1,5 @@
-import { RollupOptions, OutputOptions, ModuleFormat } from 'rollup'
 import type { Config } from '@jest/types'
+import { ModuleFormat, OutputOptions, RollupOptions } from 'rollup'
 
 export interface UserConfig {
   babel?: UserBabelConfig

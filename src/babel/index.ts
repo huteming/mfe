@@ -3,17 +3,17 @@ import {
   TransformedBabelConfig,
   UserBabelConfig,
 } from '../types'
-import { join, extname, relative } from 'path'
-import { existsSync, readFileSync, statSync } from 'fs'
 import getBabelConfig from '@/utils/getBabelConfig'
+import parseTsCompilerOptions from '@/utils/parseTsCompilerOptions'
+import { parallel, series } from 'bach'
+import del from 'del'
+import { existsSync, readFileSync, statSync } from 'fs'
 import gulp from 'gulp'
+import babel from 'gulp-babel'
 import gulpIf from 'gulp-if'
 import gulpTs from 'gulp-typescript'
-import babel from 'gulp-babel'
-import del from 'del'
-import { series, parallel } from 'bach'
-import parseTsCompilerOptions from '@/utils/parseTsCompilerOptions'
 import produce from 'immer'
+import { extname, join, relative } from 'path'
 
 interface BabelOpts {
   cwd: string

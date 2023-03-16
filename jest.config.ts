@@ -138,7 +138,7 @@ export default {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -150,7 +150,7 @@ export default {
   testMatch: [
     // "**/__tests__/**/*.[jt]s?(x)",
     // "**/?(*.)+(spec|test).[tj]s?(x)"
-    "<rootDir>/tests/?(*.)+(spec|test).[tj]s?(x)"
+    '<rootDir>/tests/?(*.)+(spec|test).[tj]s?(x)',
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -193,4 +193,4 @@ export default {
 
   // Whether to use watchman for file crawling
   // watchman: true,
-};
+}

@@ -1,14 +1,14 @@
-import { rollup } from 'rollup'
-import getRollupConfig from './getRollupConfig'
 import {
   BuildCommandOptions,
   TransformedRollupConfig,
   UserRollupConfig,
 } from '../types'
-import { join, extname, relative } from 'path'
-import produce from 'immer'
-import del from 'del'
 import getOutputDir from './getOutputDir'
+import getRollupConfig from './getRollupConfig'
+import del from 'del'
+import produce from 'immer'
+import { extname, join, relative } from 'path'
+import { rollup } from 'rollup'
 
 interface RollupOpts {
   cwd: string

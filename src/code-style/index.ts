@@ -1,9 +1,9 @@
 import { CodeStyleCommandOptions } from '@/types'
-import stringify from 'json-stable-stringify-without-jsonify'
-import { writeFileSync } from 'fs'
-import { join } from 'path'
-import spawn from 'cross-spawn'
 import { Legacy } from '@eslint/eslintrc'
+import spawn from 'cross-spawn'
+import { writeFileSync } from 'fs'
+import stringify from 'json-stable-stringify-without-jsonify'
+import { join } from 'path'
 
 const { ConfigOps, naming, ModuleResolver } = Legacy
 

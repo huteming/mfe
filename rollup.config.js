@@ -1,6 +1,6 @@
-import typescript from 'rollup-plugin-ts'
 import pkg from './package.json'
 import json from '@rollup/plugin-json'
+import typescript from 'rollup-plugin-ts'
 
 const external = [
   ...Object.keys(pkg.dependencies || {}),

@@ -1,7 +1,11 @@
-import { Command } from 'commander'
 import { version } from '../package.json'
 import babel from './babel'
+import initCodeStyle from './code-style'
+import mferc from './mferc'
+import release from './release'
 import rollup from './rollup'
+import template, { TemplateFileType } from './template'
+import test from './test'
 import {
   BuildCommandOptions,
   CodeStyleCommandOptions,
@@ -10,13 +14,9 @@ import {
   UserConfig,
 } from './types'
 import registerBabel from './utils/registerBabel'
+import { Command } from 'commander'
 import { existsSync, readFileSync, statSync } from 'fs'
-import { join, extname, relative } from 'path'
-import test from './test'
-import mferc from './mferc'
-import template, { TemplateFileType } from './template'
-import initCodeStyle from './code-style'
-import release from './release'
+import { extname, join, relative } from 'path'
 
 function getUserFile(cwd: string, filename?: string): string {
   const userFile = join(cwd, filename || '.mferc.ts')

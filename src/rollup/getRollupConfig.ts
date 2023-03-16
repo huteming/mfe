@@ -1,27 +1,27 @@
-import { extname, join } from 'path'
 import {
   BuildCommandOptions,
   BuildRollupConfig,
   TransformedRollupConfig,
 } from '../types'
-import { CompilerOptions, ScriptTarget } from 'typescript'
-import typescript from 'rollup-plugin-ts'
-import json from '@rollup/plugin-json'
-import url from '@rollup/plugin-url'
-import svgr from '@svgr/rollup'
-import nodeResolve from '@rollup/plugin-node-resolve'
-import replace from '@rollup/plugin-replace'
-import postcss from 'rollup-plugin-postcss'
-import NpmImport from 'less-plugin-npm-import'
-import autoprefixer from 'autoprefixer'
+import getBabelConfig from '@/utils/getBabelConfig'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
-import { terser } from 'rollup-plugin-terser'
-import { visualizer } from 'rollup-plugin-visualizer'
-import getBabelConfig from '@/utils/getBabelConfig'
-import produce from 'immer'
+import json from '@rollup/plugin-json'
+import nodeResolve from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
+import url from '@rollup/plugin-url'
+import svgr from '@svgr/rollup'
+import autoprefixer from 'autoprefixer'
 import { existsSync, readFileSync, statSync } from 'fs'
+import produce from 'immer'
+import NpmImport from 'less-plugin-npm-import'
+import { extname, join } from 'path'
 import type { Plugin } from 'rollup'
+import postcss from 'rollup-plugin-postcss'
+import { terser } from 'rollup-plugin-terser'
+import typescript from 'rollup-plugin-ts'
+import { visualizer } from 'rollup-plugin-visualizer'
+import { CompilerOptions, ScriptTarget } from 'typescript'
 
 interface IGetRollupConfigOpts {
   cwd: string
