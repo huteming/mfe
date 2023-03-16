@@ -34,9 +34,12 @@ interface IPkg {
   name?: string
 }
 
-// @ant-design/icons
-// antd
-// file-loader!ace-builds
+/**
+ * 示例
+ * 1. @ant-design/icons
+ * 2. antd
+ * 3. file-loader!ace-builds
+ */
 function getPkgNameByid(id: string) {
   // 行内的 webpack-loader
   id = id.replace(/^file-loader!/, '')
