@@ -6,10 +6,6 @@ export const rollup = {
       format: 'cjs',
       exports: 'auto',
     },
-    // {
-    //   file: 'lib/index.esm.js',
-    //   format: 'esm',
-    // },
   ],
-  // externalsExclude: ['ramda'],
+  externalsExclude: ['ramda'],
 }

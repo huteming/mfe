@@ -103,10 +103,12 @@
     "@types/cross-spawn": "^6.0.2",
     "@types/gulp": "^4.0.9",
     "@types/gulp-if": "^0.0.34",
+    "@types/ramda": "^0.28.23",
     "@types/shelljs": "^0.8.11",
     "@umijs/utils": "^4.0.59",
     "husky": "^7.0.4",
     "prettier": "^2.8.4",
+    "ramda": "^0.28.0",
     "shelljs": "^0.8.5"
   },
   "resolutions": {
