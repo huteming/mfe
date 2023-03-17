@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "node ../../../../bin/mfe.js build --clean"
+  },
+  "dependencies": {
+    "react": "16.x"
+  }
+}
