@@ -44,7 +44,6 @@ export default async function main() {
     .command('build')
     .description('构建')
     .option('--clean', '清除目录文件夹')
-    .option('--stats', '生成构建分析文件')
     .option('--config <config>', '自定义配置文件')
     .action((options: BuildCommandOptions) => {
       const { babel: userBabelConfig, rollup: userRollupConfig } =
@@ -61,13 +60,7 @@ export default async function main() {
       }
       // rollup 打包
       if (userRollupConfig) {
-        rollup(
-          {
-            cwd,
-            userRollupConfig,
-          },
-          options,
-        )
+        rollup(cwd, userRollupConfig, options)
       }
     })
 

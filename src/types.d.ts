@@ -3,7 +3,7 @@ import { ModuleFormat, OutputOptions, RollupOptions } from 'rollup'
 
 export interface UserConfig {
   babel?: UserBabelConfig
-  rollup?: UserRollupConfig
+  rollup?: IRollupOptions
   jest?: UserJestConfig
 }
 
@@ -48,35 +48,30 @@ interface IBabelOutputOptions {
 
 // ------------ rollup ------------
 
-// 这是自定义的输出配置对象
-export interface IRollupOutputOptions extends OutputOptions {
-  file: string
-  format: ModuleFormat
-
+export interface IRollupOptions extends RollupOptions {
   // 自定义新增, 需要手动删除
-  target?: 'node' | 'browser'
-  minify?: boolean
-}
-
-interface IRollupOptions extends RollupOptions {
-  plugins?: any[]
-  extraBabelPlugins?: any[]
-  externalsExclude?: any[]
-}
-
-export interface UserRollupConfig extends IRollupOptions {
-  input: string
-  output: IRollupOutputOptions[]
-}
-
-export interface TransformedRollupConfig extends IRollupOptions {
-  input: string
-  output: IRollupOutputOptions
-}
-
-export interface BuildRollupConfig extends RollupOptions {
-  input: string
-  output: IRollupOutputOptions
+  extraOptions?: {
+    /**
+     * babel 参数
+     * @default browser
+     */
+    target?: 'node' | 'browser'
+    /**
+     * 是否开启压缩
+     * @default false
+     */
+    minify?: boolean
+    /**
+     * 自定义 babel 插件
+     */
+    babelPlugins?: any[]
+    /**
+     * 将依赖加入构建中。
+     * 本来默认会将所有的依赖都加入 external 中，不参与构建
+     * 这个属性就是将指定的库排除出 external，从而加入构建
+     */
+    externalsExclude?: string[]
+  }
 }
 
 // ------------ jest ------------

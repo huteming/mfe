@@ -7,5 +7,7 @@ export const rollup = {
       exports: 'auto',
     },
   ],
-  externalsExclude: ['ramda'],
+  extraOptions: {
+    externalsExclude: ['ramda'],
+  },
 }

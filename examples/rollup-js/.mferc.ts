@@ -5,12 +5,13 @@ export const rollup = {
       file: 'lib/index.js',
       format: 'cjs',
       exports: 'auto',
-      target: 'browser',
     },
     {
       file: 'lib/index.esm.js',
       format: 'esm',
-      target: 'browser',
     },
   ],
+  extraOptions: {
+    target: 'browser',
+  },
 }

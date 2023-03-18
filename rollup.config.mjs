@@ -1,4 +1,4 @@
-import pkg from './package.json'
+import pkg from './package.json' assert { type: 'json' }
 import json from '@rollup/plugin-json'
 import typescript from 'rollup-plugin-ts'
 
@@ -27,6 +27,12 @@ export default [
       json(),
       typescript({
         transpiler: 'babel',
+        browserslist: false,
+        tsconfig: (resolvedConfig) => ({
+          ...resolvedConfig,
+          allowJs: false,
+          declaration: true,
+        }),
       }),
     ],
     external,

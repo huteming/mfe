@@ -1,70 +1,48 @@
-import {
-  BuildCommandOptions,
-  TransformedRollupConfig,
-  UserRollupConfig,
-} from '../types'
-import getOutputDir from './getOutputDir'
+import { BuildCommandOptions, IRollupOptions } from '../types'
 import getRollupConfig from './getRollupConfig'
 import del from 'del'
-import produce from 'immer'
-import { extname, join, relative } from 'path'
-import { rollup } from 'rollup'
-
-interface RollupOpts {
-  cwd: string
-  userRollupConfig: UserRollupConfig
-}
-
-/**
- * 铺平用户配置文件中的 input => output, 变为 1 对 1 的形式
- */
-function transformRollupConfig(
-  cwd: string,
-  userConfig: UserRollupConfig,
-): TransformedRollupConfig[] {
-  const { input, output, ...rest } = userConfig
-  return output.map((out) => {
-    return {
-      input: join(cwd, input),
-      output: produce(out, (draft) => {
-        draft.file = join(cwd, draft.file)
-      }),
-      ...rest,
-    }
-  })
-}
+import { RollupBuild, rollup } from 'rollup'
+import { getOutDir } from './utils'
 
 export default async function build(
-  opts: RollupOpts,
+  cwd: string,
+  rollupOptions: IRollupOptions,
   options: BuildCommandOptions,
 ) {
-  const { cwd, userRollupConfig } = opts
-  const rollupConfigs = transformRollupConfig(cwd, userRollupConfig)
+  let bundle: RollupBuild | null = null
+  let buildFailed = false
 
-  await Promise.all(
-    rollupConfigs.map(async (rollupConfig) => {
-      let bundle
-      try {
-        const { output, ...input } = getRollupConfig(
-          {
-            cwd,
-            rollupConfig,
-          },
-          options,
-        )
-        // clean dir
-        if (options.clean) {
-          await del([`${getOutputDir(output)}/*`])
+  try {
+    // 一个 output 对象对应一个输出
+    if (!rollupOptions.output) {
+      throw new Error('缺少 output 配置')
+    }
+
+    const normalizedRollupOptions = getRollupConfig(cwd, rollupOptions, options)
+    bundle = await rollup(normalizedRollupOptions)
+
+    const outOptions = Array.isArray(rollupOptions.output)
+      ? rollupOptions.output
+      : [rollupOptions.output]
+    const outPromises = outOptions.map(async (outOption) => {
+      // 清空目标文件夹
+      if (options.clean) {
+        const outDir = getOutDir(cwd, outOption)
+        if (outDir) {
+          await del([`${outDir}/*`])
         }
-
-        bundle = await rollup(input)
-        await bundle.write(output)
-      } catch (err) {
-        console.error(err)
-        throw err
-      } finally {
-        await bundle?.close()
       }
-    }),
-  )
+      // 输出文件
+      return bundle!.write(outOption)
+    })
+
+    await Promise.all(outPromises)
+  } catch (err) {
+    buildFailed = true
+    console.error(err)
+  } finally {
+    await bundle?.close()
+  }
+
+  process.exit(buildFailed ? 1 : 0)
 }

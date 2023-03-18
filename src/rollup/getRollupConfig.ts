@@ -1,10 +1,5 @@
-import {
-  BuildCommandOptions,
-  BuildRollupConfig,
-  TransformedRollupConfig,
-} from '../types'
+import type { BuildCommandOptions, IRollupOptions } from '../types'
 import getBabelConfig from '@/utils/getBabelConfig'
-import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -12,139 +7,51 @@ import replace from '@rollup/plugin-replace'
 import url from '@rollup/plugin-url'
 import svgr from '@svgr/rollup'
 import autoprefixer from 'autoprefixer'
-import { existsSync, readFileSync, statSync } from 'fs'
-import produce from 'immer'
 import NpmImport from 'less-plugin-npm-import'
-import { extname, join } from 'path'
-import type { Plugin } from 'rollup'
+import type { InputPluginOption } from 'rollup'
 import postcss from 'rollup-plugin-postcss'
-import { terser } from 'rollup-plugin-terser'
 import typescript from 'rollup-plugin-ts'
-import { visualizer } from 'rollup-plugin-visualizer'
-import { CompilerOptions, ScriptTarget } from 'typescript'
+import terser from '@rollup/plugin-terser'
+import getExternal, { getTsConfig } from './utils'
 
-interface IGetRollupConfigOpts {
-  cwd: string
-  rollupConfig: TransformedRollupConfig
-}
+function getFormat(rollupOptions: IRollupOptions) {
+  const { output } = rollupOptions
 
-interface IPkg {
-  dependencies?: Object
-  peerDependencies?: Object
-  name?: string
-}
-
-/**
- * 示例
- * 1. @ant-design/icons
- * 2. antd
- * 3. file-loader!ace-builds
- */
-function getPkgNameByid(id: string) {
-  // 行内的 webpack-loader
-  id = id.replace(/^file-loader!/, '')
-
-  const splitted = id.split('/')
-  // @ 和 @tmp 是为了兼容 umi 的逻辑
-  if (id.charAt(0) === '@' && splitted[0] !== '@' && splitted[0] !== '@tmp') {
-    return splitted.slice(0, 2).join('/')
+  if (Array.isArray(output)) {
+    return output[0].format
   }
-  return id.split('/')[0]
-}
-
-function testExternal(external: string[], excludes: string[]) {
-  return function (id: string) {
-    if (excludes.includes(id)) {
-      return false
-    }
-    return external.includes(getPkgNameByid(id))
-  }
-}
-
-function mergePlugins(
-  defaultPlugins: Plugin[],
-  extraPlugins: Plugin[],
-  cannotOverridePlugins: Plugin[],
-): Plugin[] {
-  const sortedPlugins = [
-    ...defaultPlugins,
-    ...extraPlugins,
-    ...cannotOverridePlugins,
-  ]
-  const pluginsMap: Record<string, Plugin> = sortedPlugins.reduce(
-    (r, plugin) => ({ ...r, [plugin.name]: plugin }),
-    {},
-  )
-  return Object.values(pluginsMap)
+  return output?.format
 }
 
 export default function getRollupConfig(
-  opts: IGetRollupConfigOpts,
+  cwd: string,
+  rollupOptions: IRollupOptions,
   options: BuildCommandOptions,
-): BuildRollupConfig {
-  const { cwd, rollupConfig } = opts
+): IRollupOptions {
   const {
-    input,
-    output,
-    plugins: extraRollupPlugins = [],
-    extraBabelPlugins,
-    externalsExclude = [],
-  } = rollupConfig
-  const { target = 'browser', format, minify } = output
-  const entryExt = extname(input)
-  const isTypeScript = entryExt === '.ts' || entryExt === '.tsx'
+    plugins: rollupPlugins = [],
+    extraOptions,
+    ...restRollupOptions
+  } = rollupOptions
+
+  const {
+    target = 'browser',
+    minify = false,
+    babelPlugins,
+    externalsExclude,
+  } = extraOptions || {}
+
+  const format = getFormat(rollupOptions) || 'es'
   const extensions = ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs']
-
-  let pkg = {} as IPkg
-  try {
-    pkg = require(join(cwd, 'package.json'))
-  } catch (e) {}
-
-  // ref: https://rollupjs.org/guide/en#external
-  // 潜在问题：引用包的子文件时会报 warning，比如 @babel/runtime/helpers/esm/createClass
-  // * babel-plugin-import 就会引用包的子文件
-  // 解决方案：可以用 function 处理
-  const external = [
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
-  ]
-
-  // umd 只要 external peerDependencies
-  const externalPeerDeps = [...Object.keys(pkg.peerDependencies || {})]
 
   const babelConfig = getBabelConfig({
     format,
     target,
     typescript: true,
-    plugins: extraBabelPlugins,
+    plugins: babelPlugins,
   })
 
-  const extraUmdPlugins = [
-    // A Rollup plugin to convert CommonJS modules to ES6
-    commonjs({
-      include: /node_modules/,
-    }),
-  ]
-
-  const getTsConfig = () => {
-    if (existsSync(join(cwd, 'tsconfig.json'))) {
-      return (resolvedConfig: CompilerOptions) => ({
-        ...resolvedConfig,
-        declaration: true,
-        target: ScriptTarget.ESNext,
-      })
-    }
-    return {
-      allowSyntheticDefaultImports: true,
-      declaration: true,
-      module: 'esnext',
-      target: 'esnext',
-      moduleResolution: 'node',
-      jsx: 'react',
-    }
-  }
-
-  const defaultPlugins: Plugin[] = [
+  const plugins: InputPluginOption[] = [
     replace({
       values: {
         'process.env.NODE_ENV': JSON.stringify('production'),
@@ -173,66 +80,44 @@ export default function getRollupConfig(
         }),
       ],
     }),
+    // 解析依赖的第三方库，加入构建结果中
     nodeResolve({
       mainFields: ['module', 'jsnext:main', 'main'],
       extensions,
     }),
     json(),
-    isTypeScript
-      ? typescript({
-          transpiler: 'babel',
-          babelConfig,
-          tsconfig: getTsConfig(),
-        })
-      : babel({
-          ...babelConfig,
-          // ref: https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers
-          babelHelpers: 'runtime',
-          exclude: /\/node_modules\//,
-          babelrc: false,
-          // ref: https://github.com/rollup/rollup-plugin-babel#usage
-          extensions,
-        }),
-    ...(format === 'umd' ? extraUmdPlugins : []),
-    ...(minify
+    typescript({
+      transpiler: 'babel',
+      babelConfig,
+      browserslist: false,
+      tsconfig: getTsConfig(cwd),
+    }),
+
+    ...(format === 'umd'
       ? [
-          terser({
-            compress: {
-              pure_getters: true,
-              unsafe: true,
-              unsafe_comps: true,
-            },
+          // A Rollup plugin to convert CommonJS modules to ES6
+          commonjs({
+            include: /node_modules/,
           }),
         ]
       : []),
-  ]
-  // 有些插件必须放在最后，所以不能覆盖
-  const cannotOverridePlugins: Plugin[] = [
-    // https://github.com/btd/rollup-plugin-visualizer
-    ...(options.stats
-      ? [
-          visualizer({
-            gzipSize: true,
-          }),
-        ]
-      : []),
+
+    minify &&
+      terser({
+        compress: {
+          pure_getters: true,
+          unsafe: true,
+          unsafe_comps: true,
+        },
+      }),
+
+    ...(Array.isArray(rollupPlugins) ? rollupPlugins : [rollupPlugins]),
   ]
 
   return {
-    input,
-    output: produce(output, (draft) => {
-      delete draft.target
-      delete draft.minify
-    }),
-    plugins: mergePlugins(
-      defaultPlugins,
-      extraRollupPlugins,
-      cannotOverridePlugins,
-    ),
-    external: testExternal(
-      format === 'umd' ? externalPeerDeps : external,
-      externalsExclude,
-    ),
+    ...restRollupOptions,
+    plugins,
+    external: getExternal(cwd, format, externalsExclude),
     // fix warn: The 'this' keyword is equivalent to 'undefined' at the top level of an ES module, and has been rewritten
     // https://github.com/rollup/rollup/issues/4022
     onwarn(warning, warn) {
