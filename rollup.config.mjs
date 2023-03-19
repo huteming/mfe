@@ -1,6 +1,6 @@
 import json from '@rollup/plugin-json'
-import typescript from '@rollup/plugin-typescript'
 import { createRequire } from 'node:module'
+import typescript from 'rollup-plugin-typescript2'
 
 const require = createRequire(import.meta.url)
 const pkg = require('./package.json')
@@ -15,6 +15,8 @@ const external = [
   'jest',
   'jest-cli/build/cli/args',
   'node:url',
+  'node:path',
+  'node:module',
 ]
 
 export default [
@@ -30,7 +32,12 @@ export default [
         format: 'es',
       },
     ],
-    plugins: [json(), typescript()],
+    plugins: [
+      json(),
+      typescript({
+        tsconfigOverride: { compilerOptions: { declaration: true } },
+      }),
+    ],
     external,
   },
 ]

@@ -111,6 +111,7 @@
     "husky": "^7.0.4",
     "prettier": "^2.8.4",
     "ramda": "^0.28.0",
+    "rollup-plugin-typescript2": "^0.34.1",
     "shelljs": "^0.8.5",
     "ts-node": "^10.9.1"
   },

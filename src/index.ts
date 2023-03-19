@@ -1,4 +1,3 @@
-import { version } from '../package.json'
 import babel from './babel'
 import initCodeStyle from './code-style'
 import mferc from './mferc'
@@ -16,7 +15,11 @@ import {
 import registerBabel from './utils/registerBabel'
 import { Command } from 'commander'
 import { existsSync, readFileSync, statSync } from 'fs'
+import { createRequire } from 'node:module'
 import { extname, join, relative } from 'path'
+
+const require = createRequire(import.meta.url)
+const pkg = require('./package.json')
 
 function getUserFile(cwd: string, filename?: string): string {
   const userFile = join(cwd, filename || '.mferc.ts')
@@ -36,7 +39,7 @@ function loadUserConfig(cwd: string, filename?: string): UserConfig {
 
 export async function run() {
   const program = new Command()
-  program.version(version)
+  program.version(pkg.version)
   // 根路径
   const cwd = process.cwd()
 
@@ -129,3 +132,5 @@ export async function run() {
 }
 
 export * from './rollup/helpers'
+
+export * from './types'

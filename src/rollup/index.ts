@@ -4,11 +4,7 @@ import { getOutDir } from './utils'
 import del from 'del'
 import { RollupBuild, RollupOptions, rollup } from 'rollup'
 
-async function bundler(
-  cwd: string,
-  rollupOptions: RollupOptions,
-  options: BuildCommandOptions,
-) {
+async function bundler(rollupOptions: RollupOptions) {
   let bundle: RollupBuild | null = null
 
   try {
@@ -23,14 +19,6 @@ async function bundler(
       : [rollupOptions.output]
 
     const outPromises = outOptions.map(async (outOption) => {
-      // 清空目标文件夹。
-      // 每个 output 单独输出，清理变得困难了
-      // if (options.clean) {
-      //   const outDir = getOutDir(cwd, outOption)
-      //   if (outDir) {
-      //     await del([`${outDir}/*`])
-      //   }
-      // }
       // 输出文件
       return bundle!.write(outOption)
     })
@@ -49,13 +37,21 @@ export default async function build(
   rollupOptions: IRollupOptions | IRollupOptions[],
   options: BuildCommandOptions,
 ) {
+  // // 清空目标文件夹。
+  // if (options.clean) {
+  //   const outDir = getOutDir(cwd, outOption)
+  //   if (outDir) {
+  //     await del([`${outDir}/*`])
+  //   }
+  // }
+
   const rollupInputs = Array.isArray(rollupOptions)
     ? rollupOptions
     : [rollupOptions]
 
   const bundlers = rollupInputs.map((input) => {
-    const opt = getRollupConfig(cwd, input, options)
-    return bundler(cwd, opt, options)
+    const mergedRollupOptions = getRollupConfig(cwd, input, options)
+    return bundler(mergedRollupOptions)
   })
 
   return Promise.all(bundlers)
