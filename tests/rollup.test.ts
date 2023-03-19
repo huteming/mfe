@@ -18,7 +18,20 @@ async function run(command: string) {
 }
 
 describe('rollup', () => {
+  let spyLog
+
+  beforeEach(() => {
+    spyLog = jest.spyOn(console, 'log').mockImplementation(jest.fn())
+  })
+
+  afterEach(() => {
+    spyLog.mockRestore()
+  })
+
   for (let name of cases) {
+    // if (name !== 'defineESMBuilds') {
+    //   continue
+    // }
     it(name, async () => {
       const cwd = path.join(CASES_DIR, name)
       shell.cd(cwd)

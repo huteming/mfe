@@ -24,7 +24,7 @@ import { defineESMBuilds } from '@hutm/footing'
 
 - [] rollup 该如何清空目标目录？
 
-- [] `defineESMBuilds` 等新增方法的测试用例
+- [x] `defineESMBuilds` 等新增方法的测试用例
 
 - [] 有没有新的方式来解析 rollup 配置，现在是手动调用 babel 进行解析，看着很不友好
 
