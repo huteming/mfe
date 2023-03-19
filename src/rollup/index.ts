@@ -1,48 +1,62 @@
 import { BuildCommandOptions, IRollupOptions } from '../types'
 import getRollupConfig from './getRollupConfig'
-import del from 'del'
-import { RollupBuild, rollup } from 'rollup'
 import { getOutDir } from './utils'
+import del from 'del'
+import { RollupBuild, RollupOptions, rollup } from 'rollup'
 
-export default async function build(
+async function bundler(
   cwd: string,
-  rollupOptions: IRollupOptions,
+  rollupOptions: RollupOptions,
   options: BuildCommandOptions,
 ) {
   let bundle: RollupBuild | null = null
-  let buildFailed = false
 
   try {
-    // 一个 output 对象对应一个输出
     if (!rollupOptions.output) {
       throw new Error('缺少 output 配置')
     }
 
-    const normalizedRollupOptions = getRollupConfig(cwd, rollupOptions, options)
-    bundle = await rollup(normalizedRollupOptions)
+    bundle = await rollup(rollupOptions)
 
     const outOptions = Array.isArray(rollupOptions.output)
       ? rollupOptions.output
       : [rollupOptions.output]
+
     const outPromises = outOptions.map(async (outOption) => {
-      // 清空目标文件夹
-      if (options.clean) {
-        const outDir = getOutDir(cwd, outOption)
-        if (outDir) {
-          await del([`${outDir}/*`])
-        }
-      }
+      // 清空目标文件夹。
+      // 每个 output 单独输出，清理变得困难了
+      // if (options.clean) {
+      //   const outDir = getOutDir(cwd, outOption)
+      //   if (outDir) {
+      //     await del([`${outDir}/*`])
+      //   }
+      // }
       // 输出文件
       return bundle!.write(outOption)
     })
 
     await Promise.all(outPromises)
   } catch (err) {
-    buildFailed = true
     console.error(err)
+    throw err
   } finally {
     await bundle?.close()
   }
+}
 
-  process.exit(buildFailed ? 1 : 0)
+export default async function build(
+  cwd: string,
+  rollupOptions: IRollupOptions | IRollupOptions[],
+  options: BuildCommandOptions,
+) {
+  const rollupInputs = Array.isArray(rollupOptions)
+    ? rollupOptions
+    : [rollupOptions]
+
+  const bundlers = rollupInputs.map((input) => {
+    const opt = getRollupConfig(cwd, input, options)
+    return bundler(cwd, opt, options)
+  })
+
+  return Promise.all(bundlers)
 }

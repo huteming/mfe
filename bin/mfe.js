@@ -2,4 +2,4 @@
 
 // require('v8-compile-cache')
 
-require('../lib/index')()
+require('../lib/index').run()

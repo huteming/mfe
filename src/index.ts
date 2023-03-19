@@ -34,7 +34,7 @@ function loadUserConfig(cwd: string, filename?: string): UserConfig {
   return require(userFile)
 }
 
-export default async function main() {
+export async function run() {
   const program = new Command()
   program.version(version)
   // 根路径
@@ -62,6 +62,7 @@ export default async function main() {
       if (userRollupConfig) {
         rollup(cwd, userRollupConfig, options)
       }
+      // process.exit(buildFailed ? 1 : 0)
     })
 
   program
@@ -126,3 +127,5 @@ export default async function main() {
 
   await program.parseAsync(process.argv)
 }
+
+export * from './rollup/helpers'

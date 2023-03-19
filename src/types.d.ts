@@ -3,7 +3,7 @@ import { ModuleFormat, OutputOptions, RollupOptions } from 'rollup'
 
 export interface UserConfig {
   babel?: UserBabelConfig
-  rollup?: IRollupOptions
+  rollup?: IRollupOptions | IRollupOptions[]
   jest?: UserJestConfig
 }
 
@@ -49,11 +49,20 @@ interface IBabelOutputOptions {
 // ------------ rollup ------------
 
 export interface IRollupOptions extends RollupOptions {
-  // 自定义新增, 需要手动删除
+  /**
+   * 新增的自定义对象, 最后会手动删除
+   */
   extraOptions?: {
     /**
-     * babel 参数
-     * @default browser
+     * 用于指定生成的 bundle 的格式。对应 output.format。
+     * 和 babelTarget 不同！这个是指文件自身的格式。
+     * 这里简单将浏览器直接使用的格式统一定义为 umd
+     * @default 'es'
+     */
+    format?: 'es' | 'cjs' | 'umd'
+    /**
+     * 用于 babel 编译环境判断
+     * @default 'browser'
      */
     target?: 'node' | 'browser'
     /**

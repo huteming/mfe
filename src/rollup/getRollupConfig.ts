@@ -1,9 +1,11 @@
 import type { BuildCommandOptions, IRollupOptions } from '../types'
+import getExternal, { getTsConfig } from './utils'
 import getBabelConfig from '@/utils/getBabelConfig'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
+import terser from '@rollup/plugin-terser'
 import url from '@rollup/plugin-url'
 import svgr from '@svgr/rollup'
 import autoprefixer from 'autoprefixer'
@@ -11,17 +13,6 @@ import NpmImport from 'less-plugin-npm-import'
 import type { InputPluginOption } from 'rollup'
 import postcss from 'rollup-plugin-postcss'
 import typescript from 'rollup-plugin-ts'
-import terser from '@rollup/plugin-terser'
-import getExternal, { getTsConfig } from './utils'
-
-function getFormat(rollupOptions: IRollupOptions) {
-  const { output } = rollupOptions
-
-  if (Array.isArray(output)) {
-    return output[0].format
-  }
-  return output?.format
-}
 
 export default function getRollupConfig(
   cwd: string,
@@ -35,13 +26,13 @@ export default function getRollupConfig(
   } = rollupOptions
 
   const {
+    format = 'es',
     target = 'browser',
     minify = false,
     babelPlugins,
     externalsExclude,
   } = extraOptions || {}
 
-  const format = getFormat(rollupOptions) || 'es'
   const extensions = ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs']
 
   const babelConfig = getBabelConfig({
@@ -102,7 +93,7 @@ export default function getRollupConfig(
         ]
       : []),
 
-    minify &&
+    (minify || format === 'umd') &&
       terser({
         compress: {
           pure_getters: true,

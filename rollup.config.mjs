@@ -1,6 +1,9 @@
-import pkg from './package.json' assert { type: 'json' }
 import json from '@rollup/plugin-json'
-import typescript from 'rollup-plugin-ts'
+import typescript from '@rollup/plugin-typescript'
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
+const pkg = require('./package.json')
 
 const external = [
   ...Object.keys(pkg.dependencies || {}),
@@ -11,6 +14,7 @@ const external = [
   'assert',
   'jest',
   'jest-cli/build/cli/args',
+  'node:url',
 ]
 
 export default [
@@ -18,23 +22,15 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        file: 'lib/index.js',
-        format: 'cjs', // 输出的文件类型 (amd, cjs, esm, iife, umd)
-        exports: 'auto',
+        file: pkg.main,
+        format: 'cjs',
+      },
+      {
+        file: pkg.module,
+        format: 'es',
       },
     ],
-    plugins: [
-      json(),
-      typescript({
-        transpiler: 'babel',
-        browserslist: false,
-        tsconfig: (resolvedConfig) => ({
-          ...resolvedConfig,
-          allowJs: false,
-          declaration: true,
-        }),
-      }),
-    ],
+    plugins: [json(), typescript()],
     external,
   },
 ]
