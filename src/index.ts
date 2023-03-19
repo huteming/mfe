@@ -19,7 +19,7 @@ import { createRequire } from 'node:module'
 import { extname, join, relative } from 'path'
 
 const require = createRequire(import.meta.url)
-const pkg = require('./package.json')
+const pkg = require('../package.json')
 
 function getUserFile(cwd: string, filename?: string): string {
   const userFile = join(cwd, filename || '.mferc.ts')
