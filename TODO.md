@@ -1,8 +1,18 @@
 ## rollup
 
-- [] 导出模块的类型
+- [x] 导出模块的类型
 
-- [] 解析类型模块中的别名
+相关链接:
+
+1. https://github.com/ezolenko/rollup-plugin-typescript2/issues/273
+
+- [x] 解析类型模块中的别名
+
+2023-03-19: 没有相对比较简单的方案解决，暂时还是用相对路径！
+
+相关链接:
+
+1. https://github.com/ezolenko/rollup-plugin-typescript2/issues/201
 
 - [x] 声明 `defineESMBuilds` `defineCommonJSBuilds` `defineBrowserBuilds` ? 用来区分三种模式。
 
@@ -17,3 +27,5 @@ import { defineESMBuilds } from '@hutm/footing'
 - [] `defineESMBuilds` 等新增方法的测试用例
 
 - [] 有没有新的方式来解析 rollup 配置，现在是手动调用 babel 进行解析，看着很不友好
+
+- [] rollup 生成类型文件
