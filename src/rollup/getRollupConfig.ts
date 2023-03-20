@@ -7,7 +7,6 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import url from '@rollup/plugin-url'
-import svgr from '@svgr/rollup'
 import autoprefixer from 'autoprefixer'
 import NpmImport from 'less-plugin-npm-import'
 import type { InputPluginOption } from 'rollup'
@@ -50,7 +49,6 @@ export default function getRollupConfig(
       preventAssignment: true,
     }),
     url(),
-    svgr(),
     postcss({
       extract: false,
       inject: true,

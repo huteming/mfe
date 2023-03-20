@@ -31,3 +31,5 @@ import { defineESMBuilds } from '@hutm/footing'
 - [] rollup 生成类型文件
 
 - [] rollup 默认使用 swc 编译文件
+
+- [x] 默认配置文件支持 .mjs, .js 格式

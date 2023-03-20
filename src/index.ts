@@ -44,6 +44,7 @@ export async function run() {
   // 根路径
   const cwd = process.cwd()
 
+  // 接口文档: https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md
   program
     .command('build')
     .description('构建')
