@@ -26,6 +26,8 @@ import { defineESMBuilds } from '@hutm/footing'
 
 - [x] `defineESMBuilds` 等新增方法的测试用例
 
-- [] 有没有新的方式来解析 rollup 配置，现在是手动调用 babel 进行解析，看着很不友好
+- [x] 有没有新的方式来解析 rollup 配置，现在是手动调用 babel 进行解析，看着很不友好
 
 - [] rollup 生成类型文件
+
+- [] rollup 默认使用 swc 编译文件

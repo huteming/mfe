@@ -12,6 +12,7 @@ import {
   TestCommandOptions,
   UserConfig,
 } from './types'
+import loadConfigFile from './utils/loadConfigFile'
 import registerBabel from './utils/registerBabel'
 import { Command } from 'commander'
 import { existsSync, readFileSync, statSync } from 'fs'
@@ -48,22 +49,23 @@ export async function run() {
     .description('构建')
     .option('--clean', '清除目录文件夹')
     .option('--config <config>', '自定义配置文件')
-    .action((options: BuildCommandOptions) => {
-      const { babel: userBabelConfig, rollup: userRollupConfig } =
-        loadUserConfig(cwd, options.config)
+    .action(async (options: BuildCommandOptions) => {
+      const { babel: babelOptions, rollup: rollupOptions } =
+        await loadConfigFile(options.config)
+
       // babel 编译
-      if (userBabelConfig) {
+      if (babelOptions) {
         babel(
           {
             cwd,
-            userBabelConfig,
+            userBabelConfig: babelOptions,
           },
           options,
         )
       }
       // rollup 打包
-      if (userRollupConfig) {
-        rollup(cwd, userRollupConfig, options)
+      if (rollupOptions) {
+        rollup(cwd, rollupOptions, options)
       }
       // process.exit(buildFailed ? 1 : 0)
     })

@@ -2,7 +2,7 @@ import {
   defineBrowserBuilds,
   defineCommonJSBuilds,
   defineESMBuilds,
-} from '../..'
+} from '@hutm/footing'
 
 export const rollup = [
   defineCommonJSBuilds({
