@@ -2,6 +2,7 @@
  * https://github.com/rollup/rollup/blob/f049771dd0246cdbb461c70f85868d5402b4cd44/cli/run/loadConfigFile.ts#L85
  */
 import typescript from '@rollup/plugin-typescript'
+import { existsSync } from 'node:fs'
 import { unlink, writeFile } from 'node:fs/promises'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -72,8 +73,21 @@ async function loadTranspiledConfigFile(fileName: string) {
 
 function getFileName(fileName?: string): string {
   const cwd = process.cwd()
-  const defaults = '.mferc.ts'
-  return resolve(cwd, fileName || defaults)
+
+  if (fileName) {
+    return resolve(cwd, fileName)
+  }
+
+  const name = '.mferc'
+  const exts = ['.ts', '.mjs', '.js']
+  for (let i = 0; i < exts.length; i++) {
+    const expectFile = name + exts[i]
+    if (existsSync(expectFile)) {
+      return resolve(cwd, expectFile)
+    }
+  }
+
+  throw new Error('缺少构建配置文件')
 }
 
 async function loadConfigFromWrittenFile(
