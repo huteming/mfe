@@ -3,13 +3,35 @@
  */
 import typescript from '@rollup/plugin-typescript'
 import { unlink, writeFile } from 'node:fs/promises'
-import { dirname, isAbsolute, join, resolve } from 'node:path'
+import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { rollup } from 'rollup'
 
+/**
+ * 获取用户配置文件的导出内容
+ * 1. 如果是 js 文件，直接 import
+ * 2. 不是 js，通过 rollup 构建后，写入本地文件然后 import
+ */
 export default async function loadConfigFile(fileName?: string) {
   const safeFileName = getFileName(fileName)
+  const ext = extname(safeFileName)
 
+  if (ext === '.ts') {
+    return loadTranspiledConfigFile(safeFileName)
+  }
+  return loadJSConfigFile(safeFileName)
+}
+
+async function loadJSConfigFile(fileName: string) {
+  if (extname(fileName) === '.mjs') {
+    const fileUrl = pathToFileURL(fileName)
+    return import(fileUrl.href)
+  }
+
+  return require(fileName)
+}
+
+async function loadTranspiledConfigFile(fileName: string) {
   const inputOptions = {
     // 忽略 node_module 和 json 文件
     external: (id: string) => {
@@ -17,7 +39,7 @@ export default async function loadConfigFile(fileName?: string) {
       const isJson = id.slice(-5, id.length) === '.json'
       return inNodeModule || isJson
     },
-    input: safeFileName,
+    input: fileName,
     plugins: [typescript()],
     treeshake: false,
   }
@@ -43,7 +65,7 @@ export default async function loadConfigFile(fileName?: string) {
     ],
   })
   return loadConfigFromWrittenFile(
-    join(dirname(safeFileName), `rollup.config-${Date.now()}.mjs`),
+    join(dirname(fileName), `rollup.config-${Date.now()}.mjs`),
     code,
   )
 }
@@ -60,7 +82,7 @@ async function loadConfigFromWrittenFile(
 ) {
   await writeFile(bundledFileName, bundledCode)
   try {
-    return await import(pathToFileURL(bundledFileName).href)
+    return import(pathToFileURL(bundledFileName).href)
   } finally {
     unlink(bundledFileName)
   }

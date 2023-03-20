@@ -17,6 +17,7 @@ const external = [
   'node:url',
   'node:path',
   'node:module',
+  'node:fs',
   'node:fs/promises',
   'rollup-plugin-typescript2',
 ]
