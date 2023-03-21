@@ -1,5 +1,6 @@
 import json from '@rollup/plugin-json'
 import { createRequire } from 'node:module'
+import esbuild from 'rollup-plugin-esbuild'
 import typescript from 'rollup-plugin-typescript2'
 
 const require = createRequire(import.meta.url)
@@ -38,8 +39,12 @@ export default [
     plugins: [
       json(),
       typescript({
-        tsconfigOverride: { compilerOptions: { declaration: true } },
+        clean: true,
+        tsconfigOverride: {
+          compilerOptions: { declaration: true, emitDeclarationOnly: true },
+        },
       }),
+      esbuild(),
     ],
     external,
   },

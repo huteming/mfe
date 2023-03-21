@@ -1,5 +1,5 @@
-import log from './a'
+import log from './utils'
 
-export default () => {
-  log('b')
+export default function () {
+  log('footing')
 }

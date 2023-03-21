@@ -24,9 +24,6 @@ async function bundler(rollupOptions: RollupOptions) {
     })
 
     await Promise.all(outPromises)
-  } catch (err) {
-    console.error(err)
-    throw err
   } finally {
     await bundle?.close()
   }
@@ -50,7 +47,7 @@ export default async function build(
     : [rollupOptions]
 
   const bundlers = rollupInputs.map((input) => {
-    const mergedRollupOptions = getRollupConfig(cwd, input, options)
+    const mergedRollupOptions = getRollupConfig(cwd, input)
     return bundler(mergedRollupOptions)
   })
 

@@ -5,4 +5,9 @@ export default {
     console.log(chalk.blue(`info - `), ...msgs)
     console.log()
   },
+
+  error(...msgs: string[]) {
+    console.log(chalk.red(`error - `), ...msgs)
+    console.log()
+  },
 }

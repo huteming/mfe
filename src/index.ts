@@ -51,24 +51,28 @@ export async function run() {
     .option('--clean', '清除目录文件夹')
     .option('--config <config>', '自定义配置文件')
     .action(async (options: BuildCommandOptions) => {
-      const { babel: babelOptions, rollup: rollupOptions } =
-        await loadConfigFile(options.config)
+      try {
+        const { babel: babelOptions, rollup: rollupOptions } =
+          await loadConfigFile(options.config)
 
-      // babel 编译
-      if (babelOptions) {
-        babel(
-          {
-            cwd,
-            userBabelConfig: babelOptions,
-          },
-          options,
-        )
+        // babel 编译
+        if (babelOptions) {
+          babel(
+            {
+              cwd,
+              userBabelConfig: babelOptions,
+            },
+            options,
+          )
+        }
+        // rollup 打包
+        if (rollupOptions) {
+          rollup(cwd, rollupOptions, options)
+        }
+        // process.exit(buildFailed ? 1 : 0)
+      } catch (err) {
+        console.error(err)
       }
-      // rollup 打包
-      if (rollupOptions) {
-        rollup(cwd, rollupOptions, options)
-      }
-      // process.exit(buildFailed ? 1 : 0)
     })
 
   program

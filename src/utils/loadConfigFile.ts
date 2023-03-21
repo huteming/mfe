@@ -96,7 +96,7 @@ async function loadConfigFromWrittenFile(
 ) {
   await writeFile(bundledFileName, bundledCode)
   try {
-    return import(pathToFileURL(bundledFileName).href)
+    return await import(pathToFileURL(bundledFileName).href)
   } finally {
     unlink(bundledFileName)
   }

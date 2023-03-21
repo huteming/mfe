@@ -1,6 +1,5 @@
-import type { BuildCommandOptions, IRollupOptions } from '../types'
-import getExternal, { getTsConfig } from './utils'
-import getBabelConfig from '@/utils/getBabelConfig'
+import type { IRollupOptions } from '../types'
+import getExternal, { getTS2Config } from './utils'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -11,12 +10,13 @@ import autoprefixer from 'autoprefixer'
 import NpmImport from 'less-plugin-npm-import'
 import type { InputPluginOption } from 'rollup'
 import postcss from 'rollup-plugin-postcss'
-import typescript from 'rollup-plugin-ts'
+import typescript from 'rollup-plugin-typescript2'
+
+const { default: esbuild } = require('rollup-plugin-esbuild')
 
 export default function getRollupConfig(
   cwd: string,
   rollupOptions: IRollupOptions,
-  options: BuildCommandOptions,
 ): IRollupOptions {
   const {
     plugins: rollupPlugins = [],
@@ -24,22 +24,7 @@ export default function getRollupConfig(
     ...restRollupOptions
   } = rollupOptions
 
-  const {
-    format = 'es',
-    target = 'browser',
-    minify = false,
-    babelPlugins,
-    externalsExclude,
-  } = extraOptions || {}
-
-  const extensions = ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs']
-
-  const babelConfig = getBabelConfig({
-    format,
-    target,
-    typescript: true,
-    plugins: babelPlugins,
-  })
+  const { format = 'es', minify = false, externalsExclude } = extraOptions || {}
 
   const plugins: InputPluginOption[] = [
     replace({
@@ -72,24 +57,14 @@ export default function getRollupConfig(
     // 解析依赖的第三方库，加入构建结果中
     nodeResolve({
       mainFields: ['module', 'jsnext:main', 'main'],
-      extensions,
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs'],
+    }),
+    commonjs({
+      include: /node_modules/,
     }),
     json(),
-    typescript({
-      transpiler: 'babel',
-      babelConfig,
-      browserslist: false,
-      tsconfig: getTsConfig(cwd),
-    }),
-
-    ...(format === 'umd'
-      ? [
-          // A Rollup plugin to convert CommonJS modules to ES6
-          commonjs({
-            include: /node_modules/,
-          }),
-        ]
-      : []),
+    typescript(getTS2Config(cwd)),
+    esbuild(),
 
     (minify || format === 'umd') &&
       terser({

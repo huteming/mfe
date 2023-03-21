@@ -5,6 +5,15 @@ import {
 } from '@hutm/footing'
 
 export const rollup = [
+  // {
+  //   input: 'src/index.ts',
+  //   output: [
+  //     {
+  //       file: 'lib/index.esm.js',
+  //       format: 'es',
+  //     },
+  //   ],
+  // },
   defineCommonJSBuilds({
     input: 'src/index.ts',
     output: [

@@ -1,14 +1,47 @@
 import ensureRelative from '@/utils/ensureRelative'
 import { existsSync } from 'fs'
-import { dirname, join } from 'path'
+import { dirname, join, resolve } from 'node:path'
 import { ModuleFormat, OutputOptions } from 'rollup'
-import { TypescriptPluginOptions } from 'rollup-plugin-ts'
+import type { IOptions } from 'rollup-plugin-typescript2/dist/ioptions'
 import { CompilerOptions } from 'typescript'
+
+/**
+ * 获取 rollup-plugin-typescript2 插件的配置
+ */
+export function getTS2Config(cwd: string): Partial<IOptions> {
+  const opt: Partial<IOptions> = {
+    clean: true,
+    check: false,
+  }
+
+  // tsconfig.json 不存在，不能进行类型检查和配置覆盖，否则报错
+  // 1. 当 tsconfig 不存在进行类型检查时
+  //    error:  plugin: rpt2, hook: buildEnd -> triggerUncaughtException(err, true /* fromPromise */)
+  // 2. 当 tsconfig 不存在进行配置覆盖时
+  //    error:  plugin: rpt2, hook: generateBundle -> base = Object.assign(new Error(base.message), base)
+  if (existsSync(resolve(cwd, 'tsconfig.json'))) {
+    opt.check = true
+    opt.tsconfigDefaults = {
+      compilerOptions: {
+        target: 'esnext',
+        module: 'esnext',
+        allowJs: true,
+        checkJs: true,
+        declaration: true,
+      },
+    }
+    opt.tsconfigOverride = {
+      compilerOptions: { emitDeclarationOnly: true },
+    }
+  }
+
+  return opt
+}
 
 /**
  * 获取 rollup-plugin-ts 插件的 tsconfig 对象
  */
-export function getTsConfig(cwd: string): TypescriptPluginOptions['tsconfig'] {
+export function getTsConfig(cwd: string) {
   if (existsSync(join(cwd, 'tsconfig.json'))) {
     return (resolvedConfig: CompilerOptions) => ({
       ...resolvedConfig,
