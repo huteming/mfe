@@ -5,11 +5,24 @@
   "author": "huteming <teming.hu@qq.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "lib/index.js",
-  "module": "lib/index.esm.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/footing.js",
+  "module": "dist/footing.esm.mjs",
+  "types": "dist/footing.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/footing.d.ts",
+      "require": "./dist/footing.js",
+      "import": "./dist/footing.esm.mjs"
+    },
+    "./helpers": {
+      "types": "./dist/helpers.d.ts",
+      "require": "./dist/helpers.js",
+      "default": "./dist/helpers.esm.mjs"
+    },
+    "./dist/*": "./dist/*"
+  },
   "files": [
-    "lib",
+    "dist",
     "static"
   ],
   "publishConfig": {
@@ -18,7 +31,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "rollup -c --configPlugin typescript",
+    "build": "rollup --config rollup.config.ts --configPlugin typescript",
     "release": "node scripts/release.js --skipTests",
     "format": "prettier --write .",
     "prepare": "husky install"

@@ -48,6 +48,7 @@ export async function run() {
   program
     .command('build')
     .description('构建')
+    .option('--key', '标志符')
     .option('--clean', '清除目录文件夹')
     .option('--config <config>', '自定义配置文件')
     .action(async (options: BuildCommandOptions) => {

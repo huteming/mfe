@@ -7,7 +7,4 @@ export const rollup = {
       exports: 'auto',
     },
   ],
-  extraOptions: {
-    minify: false,
-  },
 }

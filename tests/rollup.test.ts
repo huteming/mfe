@@ -29,7 +29,7 @@ describe('rollup', () => {
   })
 
   for (let name of cases) {
-    // if (name !== 'default-config-file-mjs') {
+    // if (name !== 'defineESMBuilds') {
     //   continue
     // }
     it(name, async () => {

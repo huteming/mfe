@@ -28,6 +28,7 @@ export function getTS2Config(cwd: string): Partial<IOptions> {
         allowJs: true,
         checkJs: true,
         declaration: true,
+        // allowSyntheticDefaultImports: true,
       },
     }
     opt.tsconfigOverride = {

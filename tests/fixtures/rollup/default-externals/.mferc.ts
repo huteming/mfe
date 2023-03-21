@@ -3,7 +3,7 @@ export const rollup = {
   output: [
     {
       file: 'lib/index.js',
-      format: 'es',
+      format: 'cjs',
     },
   ],
 }

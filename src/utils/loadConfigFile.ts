@@ -1,12 +1,12 @@
 /**
  * https://github.com/rollup/rollup/blob/f049771dd0246cdbb461c70f85868d5402b4cd44/cli/run/loadConfigFile.ts#L85
  */
-import typescript from '@rollup/plugin-typescript'
 import { existsSync } from 'node:fs'
 import { unlink, writeFile } from 'node:fs/promises'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { rollup } from 'rollup'
+import typescript from 'rollup-plugin-typescript2'
 
 /**
  * 获取用户配置文件的导出内容
@@ -41,7 +41,12 @@ async function loadTranspiledConfigFile(fileName: string) {
       return inNodeModule || isJson
     },
     input: fileName,
-    plugins: [typescript()],
+    plugins: [
+      typescript({
+        clean: true,
+        check: false,
+      }),
+    ],
     treeshake: false,
   }
 

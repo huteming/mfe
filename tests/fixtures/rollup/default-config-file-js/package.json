@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "build": "node ../../../../bin/mfe.js build"
+    "build": "node ../../../../bin/mfe.js build --key default-config-file-js"
   }
 }

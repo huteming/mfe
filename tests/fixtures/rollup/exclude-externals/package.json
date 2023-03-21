@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "node ../../../../bin/mfe.js build --key exclude-externals"
+  },
+  "dependencies": {
+    "ramda": "^0.28.0"
+  }
+}
