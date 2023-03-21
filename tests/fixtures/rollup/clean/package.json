@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build": "node ../../../../bin/mfe.js build --key clean"
+  }
+}

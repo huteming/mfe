@@ -33,3 +33,5 @@ import { defineESMBuilds } from '@hutm/footing'
 - [] rollup 默认使用 swc 编译文件
 
 - [x] 默认配置文件支持 .mjs, .js 格式
+
+- [] 测试用例能不能依赖未构建的文件？

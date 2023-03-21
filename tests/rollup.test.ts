@@ -29,7 +29,7 @@ describe('rollup', () => {
   })
 
   for (let name of cases) {
-    // if (name !== 'defineESMBuilds') {
+    // if (name !== 'clean') {
     //   continue
     // }
     it(name, async () => {

@@ -6,7 +6,6 @@ import {
 import getBabelConfig from '@/utils/getBabelConfig'
 import parseTsCompilerOptions from '@/utils/parseTsCompilerOptions'
 import { parallel, series } from 'bach'
-import del from 'del'
 import { existsSync, readFileSync, statSync } from 'fs'
 import gulp from 'gulp'
 import babel from 'gulp-babel'
@@ -140,7 +139,7 @@ export default function build(opts: BabelOpts, options: BuildCommandOptions) {
 
     const clean = async () => {
       if (options.clean) {
-        await del([`${dir}/*`])
+        // await del([`${dir}/*`])
       }
     }
 

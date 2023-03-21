@@ -54,6 +54,10 @@ export interface IRollupOptions extends RollupOptions {
    */
   extraOptions?: {
     /**
+     * 是否清空输出目录
+     */
+    clean?: boolean
+    /**
      * 用于指定生成的 bundle 的格式。对应 output.format。
      * 和 babelTarget 不同！这个是指文件自身的格式。
      * 这里简单将浏览器直接使用的格式统一定义为 umd
