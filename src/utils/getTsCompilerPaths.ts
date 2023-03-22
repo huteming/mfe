@@ -1,5 +1,5 @@
 import parseTsCompilerOptions from './parseTsCompilerOptions'
-import produce from 'immer'
+import { produce } from 'immer'
 
 /**
  * 从 tsconfig 中解析别名

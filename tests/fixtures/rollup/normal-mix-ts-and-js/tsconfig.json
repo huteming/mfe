@@ -10,7 +10,6 @@
     "rootDir": "./src",
     "strict": true,
     "paths": {
-      "*": ["types/*"],
       "@/*": ["src/*"]
     },
     "allowJs": true,

@@ -19,15 +19,19 @@ export default async function test(
   commandOptions: TestCommandOptions,
 ) {
   const mergedJestOptions = mergeOptions(cwd, jestOptions)
+  const { key, ...validJestOptions } = commandOptions
 
   // 注: jest 并不提供编程的方式执行，这里只是模拟命令行参数
-  await runCLI(
+  const res = await runCLI(
     {
       //  _: Non-option arguments
       // $0: The script name or node command
-      ...commandOptions,
+      ...validJestOptions,
       config: JSON.stringify(mergedJestOptions),
     },
     [cwd],
   )
+  if (!res?.results?.success) {
+    throw new Error('测试失败')
+  }
 }

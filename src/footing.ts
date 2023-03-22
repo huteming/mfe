@@ -60,17 +60,14 @@ export async function run() {
     .command('test')
     .description('测试')
     .argument('[regexForTestFiles...]', '正则匹配文件')
+    .option('--key', '标志符')
     .option('--coverage', 'jest覆盖率')
     .action(
       async (regexForTestFiles: string[], options: TestCommandOptions) => {
-        try {
-          const { jest: jestOptions } = await loadConfigFile()
-          options._ = regexForTestFiles
+        const { jest: jestOptions } = await loadConfigFile()
+        options._ = regexForTestFiles
 
-          await test(cwd, jestOptions, options)
-        } catch (err) {
-          console.error(err)
-        }
+        await test(cwd, jestOptions, options)
       },
     )
 
