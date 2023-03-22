@@ -1,10 +1,5 @@
 require('core-js/stable')
 require('regenerator-runtime/runtime')
-const Enzyme = require('enzyme')
-// react@17: https://www.npmjs.com/package/@wojtekmaj/enzyme-adapter-react-17
-const Adapter = require('enzyme-adapter-react-16')
-
-Enzyme.configure({ adapter: new Adapter() })
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

@@ -9,68 +9,25 @@
  * 3. babel-jest 26 => 27 用法有改动
  *    相关链接: https://www.babeljs.cn/docs/config-files#jest
  */
-import createDefaultConfig from './createDefaultConfig'
-import { TestCommandOptions, UserJestConfig } from '@/types'
-import { existsSync } from 'fs'
-import produce from 'immer'
+import { IJestOptions, TestCommandOptions } from '../types'
+import mergeOptions from './mergeOptions'
 import { runCLI } from 'jest'
-import { options as cliOptions } from 'jest-cli/build/cli/args'
-import { join } from 'path'
-
-interface TestOpts {
-  cwd: string
-  userJestConfig?: UserJestConfig
-  regexForTestFiles: string[]
-}
 
 export default async function test(
-  opts: TestOpts,
-  options: TestCommandOptions,
+  cwd: string,
+  jestOptions: IJestOptions | undefined,
+  commandOptions: TestCommandOptions,
 ) {
-  const { cwd, userJestConfig, regexForTestFiles } = opts
+  const mergedJestOptions = mergeOptions(cwd, jestOptions)
 
-  const jestConfig = {
-    ...createDefaultConfig({
-      cwd,
-      userJestConfig,
-    }),
-    ...produce(userJestConfig, (draft) => {
-      // 删除自定义属性
-      delete draft?.extraBabelPlugins
-      delete draft?._setupFiles
-    }),
-  }
-
-  // cliOptions 包含 jest 所有的配置属性
-  // 这里是获取命令行中 jest 的配置
-  const argsConfig = Object.keys(cliOptions).reduce((prev, name) => {
-    if (options[name]) {
-      prev[name] = options[name]
-    }
-
-    // @ts-ignore
-    const { alias } = cliOptions[name]
-    if (alias && options[alias]) {
-      prev[name] = options[alias]
-    }
-    return prev
-  }, {} as any)
-
-  try {
-    await runCLI(
-      {
-        // jest 命令行中的正则
-        _: regexForTestFiles || [],
-        // 2022-02-26: 暂时不知道是哪个参数
-        $0: argsConfig.$0 || '',
-        // 必须是单独的 config 配置，值为 string，否则不生效
-        config: JSON.stringify(jestConfig),
-        ...argsConfig,
-      },
-      [cwd],
-    )
-  } catch (err) {
-    console.error(err)
-    throw err
-  }
+  // 注: jest 并不提供编程的方式执行，这里只是模拟命令行参数
+  await runCLI(
+    {
+      //  _: Non-option arguments
+      // $0: The script name or node command
+      ...commandOptions,
+      config: JSON.stringify(mergedJestOptions),
+    },
+    [cwd],
+  )
 }

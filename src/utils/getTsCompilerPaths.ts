@@ -1,8 +1,6 @@
 import parseTsCompilerOptions from './parseTsCompilerOptions'
 import produce from 'immer'
 
-type Resolver = Record<string, string>
-
 /**
  * 从 tsconfig 中解析别名
  *
@@ -20,14 +18,16 @@ type Resolver = Record<string, string>
  *   "utils": "src/utils"
  * }
  */
-export default function getResolverAlias(cwd: string): Resolver | null {
+export default function getTsCompilerPaths(
+  cwd: string,
+): Record<string, string> | null {
   const compilerOptions = parseTsCompilerOptions(cwd)
   if (!compilerOptions || !compilerOptions.paths) {
     return null
   }
   const { paths } = compilerOptions
   const ignores = ['*']
-  const defaults: Resolver = {}
+  const defaults: Record<string, string> = {}
 
   return Object.entries(paths).reduce((resolver, [key, values]) => {
     if (ignores.includes(key)) {

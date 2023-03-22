@@ -1,10 +1,10 @@
 import type { Config } from '@jest/types'
-import { ModuleFormat, OutputOptions, RollupOptions } from 'rollup'
+import { ModuleFormat, RollupOptions } from 'rollup'
 
-export interface UserConfig {
+export interface IConfigFileExports {
   babel?: UserBabelConfig
   rollup?: IRollupOptions | IRollupOptions[]
-  jest?: UserJestConfig
+  jest?: IJestOptions
 }
 
 // ------------ command ------------
@@ -15,7 +15,16 @@ export interface BuildCommandOptions {
   stats?: boolean
 }
 
-export interface TestCommandOptions extends Config.Argv {}
+export interface TestCommandOptions extends Config.Argv {
+  /** Non-option arguments */
+  // _: Array<string | number>
+  //
+  /** The script name or node command */
+  // $0: string
+  //
+  /** All remaining options */
+  // [argName: string]: unknown
+}
 
 export interface ReleaseCommandOptions {
   dry?: boolean
@@ -89,8 +98,12 @@ export interface IRollupOptions extends RollupOptions {
 
 // ------------ jest ------------
 
-export interface UserJestConfig extends Config.InitialOptions {
-  extraBabelPlugins?: []
-  // 同 setupFiles，用作合并，而不是覆盖
-  _setupFiles?: Config.InitialOptions['setupFiles']
+export interface IJestOptions extends Config.InitialOptions {
+  /**
+   * 新增的自定义对象, 最后会手动删除
+   */
+  extraOptions?: {
+    // 同 setupFiles，用作合并，而不是覆盖
+    setupFiles?: Config.InitialOptions['setupFiles']
+  }
 }

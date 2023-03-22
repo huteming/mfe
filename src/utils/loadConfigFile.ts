@@ -1,6 +1,7 @@
 /**
  * https://github.com/rollup/rollup/blob/f049771dd0246cdbb461c70f85868d5402b4cd44/cli/run/loadConfigFile.ts#L85
  */
+import { IConfigFileExports } from '../types'
 import { existsSync } from 'node:fs'
 import { unlink, writeFile } from 'node:fs/promises'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
@@ -13,14 +14,19 @@ import typescript from 'rollup-plugin-typescript2'
  * 1. 如果是 js 文件，直接 import
  * 2. 不是 js，通过 rollup 构建后，写入本地文件然后 import
  */
-export default async function loadConfigFile(fileName?: string) {
-  const safeFileName = getFileName(fileName)
-  const ext = extname(safeFileName)
+export default async function loadConfigFile(
+  fileName?: string,
+): Promise<IConfigFileExports> {
+  const normalizedFileName = relativeFileName(fileName)
+  if (!normalizedFileName) {
+    return {}
+  }
+  const ext = extname(normalizedFileName)
 
   if (ext === '.ts') {
-    return loadTranspiledConfigFile(safeFileName)
+    return loadTranspiledConfigFile(normalizedFileName)
   }
-  return loadJSConfigFile(safeFileName)
+  return loadJSConfigFile(normalizedFileName)
 }
 
 async function loadJSConfigFile(fileName: string) {
@@ -76,7 +82,7 @@ async function loadTranspiledConfigFile(fileName: string) {
   )
 }
 
-function getFileName(fileName?: string): string {
+function relativeFileName(fileName?: string): string | null {
   const cwd = process.cwd()
 
   if (fileName) {
@@ -92,7 +98,7 @@ function getFileName(fileName?: string): string {
     }
   }
 
-  throw new Error('缺少构建配置文件')
+  return null
 }
 
 async function loadConfigFromWrittenFile(
