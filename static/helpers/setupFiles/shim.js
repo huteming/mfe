@@ -1,6 +1,3 @@
-require('core-js/stable')
-require('regenerator-runtime/runtime')
-
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({

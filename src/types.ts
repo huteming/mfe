@@ -1,58 +1,29 @@
 import type { Config } from '@jest/types'
-import { ModuleFormat, RollupOptions } from 'rollup'
+import { RollupOptions } from 'rollup'
 
 export interface IConfigFileExports {
-  babel?: UserBabelConfig
+  gulp?: IGulpOptions | IGulpOptions[]
   rollup?: IRollupOptions | IRollupOptions[]
   jest?: IJestOptions
 }
 
-// ------------ command ------------
+// ------------ gulp ------------
 
-export interface BuildCommandOptions {
-  config?: string
-  clean?: boolean
-  stats?: boolean
+export interface IGulpOptions {
+  output: IGulpOutputOptions | IGulpOutputOptions[]
 }
 
-export interface TestCommandOptions extends Config.Argv {
-  /** Non-option arguments */
-  // _: Array<string | number>
-  //
-  /** The script name or node command */
-  // $0: string
-  //
-  /** All remaining options */
-  // [argName: string]: unknown
-}
-
-export interface ReleaseCommandOptions {
-  dry?: boolean
-  skipTests?: boolean
-  skipBuild?: boolean
-  preid?: string
-}
-
-export interface CodeStyleCommandOptions {
-  typescript?: boolean
-}
-
-// ------------ babel ------------
-
-export interface UserBabelConfig {
-  output: IBabelOutputOptions[]
-  plugins?: any[]
-}
-
-export interface TransformedBabelConfig {
-  output: IBabelOutputOptions
-  plugins: any[]
-}
-
-interface IBabelOutputOptions {
+export interface IGulpOutputOptions {
   dir: string
-  format: ModuleFormat
-  target?: 'node' | 'browser'
+  /**
+   * @default 'es'
+   */
+  format?: 'es' | 'cjs'
+  /**
+   * 是否清空输出目录
+   * @default false
+   */
+  clean?: boolean
 }
 
 // ------------ rollup ------------
@@ -64,6 +35,7 @@ export interface IRollupOptions extends RollupOptions {
   extraOptions?: {
     /**
      * 是否清空输出目录
+     * @default false
      */
     clean?: boolean
     /**
@@ -73,11 +45,6 @@ export interface IRollupOptions extends RollupOptions {
      * @default 'es'
      */
     format?: 'es' | 'cjs' | 'umd'
-    /**
-     * 用于 babel 编译环境判断
-     * @default 'browser'
-     */
-    target?: 'node' | 'browser'
     /**
      * 是否开启压缩
      * @default false
@@ -106,4 +73,32 @@ export interface IJestOptions extends Config.InitialOptions {
     // 同 setupFiles，用作合并，而不是覆盖
     setupFiles?: Config.InitialOptions['setupFiles']
   }
+}
+
+// ------------ command ------------
+
+export interface BuildCommandOptions {
+  config?: string
+}
+
+export interface TestCommandOptions extends Config.Argv {
+  /** Non-option arguments */
+  // _: Array<string | number>
+  //
+  /** The script name or node command */
+  // $0: string
+  //
+  /** All remaining options */
+  // [argName: string]: unknown
+}
+
+export interface ReleaseCommandOptions {
+  dry?: boolean
+  skipTests?: boolean
+  skipBuild?: boolean
+  preid?: string
+}
+
+export interface CodeStyleCommandOptions {
+  typescript?: boolean
 }

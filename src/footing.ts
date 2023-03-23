@@ -1,5 +1,5 @@
-import babel from './babel'
 import initCodeStyle from './code-style'
+import gulp from './gulp'
 import mferc from './mferc'
 import release from './release'
 import rollup from './rollup'
@@ -32,27 +32,17 @@ export async function run() {
     .option('--clean', '清除目录文件夹')
     .option('--config <config>', '自定义配置文件')
     .action(async (options: BuildCommandOptions) => {
-      try {
-        const { babel: babelOptions, rollup: rollupOptions } =
-          await loadConfigFile(options.config)
+      const { gulp: gulpOptions, rollup: rollupOptions } = await loadConfigFile(
+        options.config,
+      )
 
-        // babel 编译
-        if (babelOptions) {
-          babel(
-            {
-              cwd,
-              userBabelConfig: babelOptions,
-            },
-            options,
-          )
-        }
-        // rollup 打包
-        if (rollupOptions) {
-          rollup(cwd, rollupOptions, options)
-        }
-        // process.exit(buildFailed ? 1 : 0)
-      } catch (err) {
-        console.error(err)
+      // gulp 编译
+      if (gulpOptions) {
+        gulp(cwd, gulpOptions)
+      }
+      // rollup 打包
+      if (rollupOptions) {
+        rollup(cwd, rollupOptions, options)
       }
     })
 

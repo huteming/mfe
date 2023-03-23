@@ -1,3 +1,3 @@
 export default (s: string) => {
-  console.log('hello world', s)
+  console.log('hello', s)
 }

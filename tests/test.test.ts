@@ -23,9 +23,9 @@ async function run(command: string) {
 
 describe('test', () => {
   for (let name of cases) {
-    if (name !== 'setupFiles') {
-      continue
-    }
+    // if (name !== 'setupFiles') {
+    //   continue
+    // }
     it(name, async () => {
       const cwd = path.join(CASES_DIR, name)
       shell.cd(cwd)

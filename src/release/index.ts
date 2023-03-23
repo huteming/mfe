@@ -3,7 +3,6 @@ import chalk from 'chalk'
 import { prompt } from 'enquirer'
 import execa from 'execa'
 import fs from 'fs'
-import minimist from 'minimist'
 import { join, resolve } from 'path'
 import semver, { ReleaseType } from 'semver'
 

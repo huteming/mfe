@@ -1,12 +1,10 @@
-export const babel = {
+export const gulp = {
   output: [
     {
       dir: 'dist',
-      format: 'esm', // 'esm' | 'cjs'
     },
     {
       dir: 'lib',
-      format: 'cjs', // 'esm' | 'cjs'
     },
   ],
 }

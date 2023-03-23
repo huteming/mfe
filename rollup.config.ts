@@ -34,16 +34,13 @@ function commonBuild(declaration) {
       ...Object.keys(pkg.peerDependencies || {}),
       'fs',
       'path',
-      'typescript',
       'assert',
-      'jest',
-      'jest-cli/build/cli/args',
       'node:url',
       'node:path',
       'node:module',
+      'node:stream',
       'node:fs',
       'node:fs/promises',
-      'rollup-plugin-typescript2',
     ],
   }
 }
