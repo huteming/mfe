@@ -108,5 +108,3 @@ export async function run() {
 }
 
 export * from './rollup/helpers'
-
-export * from './types'
