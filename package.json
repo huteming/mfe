@@ -6,21 +6,7 @@
   "homepage": "",
   "license": "ISC",
   "main": "dist/footing.js",
-  "module": "dist/footing.esm.mjs",
   "types": "dist/footing.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/footing.d.ts",
-      "require": "./dist/footing.js",
-      "import": "./dist/footing.esm.mjs"
-    },
-    "./helpers": {
-      "types": "./dist/helpers.d.ts",
-      "require": "./dist/helpers.js",
-      "default": "./dist/helpers.esm.mjs"
-    },
-    "./dist/*": "./dist/*"
-  },
   "files": [
     "dist",
     "static"
