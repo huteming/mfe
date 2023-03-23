@@ -1,3 +1,4 @@
+import cleanBeforeWrite from './src/rollup/plugins/clean-before-write'
 import json from '@rollup/plugin-json'
 import { createRequire } from 'node:module'
 import { defineConfig } from 'rollup'
@@ -6,6 +7,8 @@ import typescript from 'rollup-plugin-typescript2'
 
 const require = createRequire(import.meta.url)
 const pkg = require('./package.json')
+
+const clean = cleanBeforeWrite('dist')
 
 function commonBuild(declaration) {
   const compiler = {
@@ -28,6 +31,7 @@ function commonBuild(declaration) {
         },
       }),
       esbuild(),
+      clean,
     ],
     external: [
       ...Object.keys(pkg.dependencies || {}),
