@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "build": "node ../../bin/mfe.js build --clean"
-  },
-  "dependencies": {
-    "ace-builds": "^1.4.14"
-  }
-}

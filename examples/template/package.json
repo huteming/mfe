@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "temp": "node ../../bin/mfe.js template test"
-  }
-}

@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "mferc": "node ../../bin/mfe.js mferc"
-  }
-}

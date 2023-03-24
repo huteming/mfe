@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "build": "node ../../bin/mfe.js build --clean --config config.ts"
-  }
-}

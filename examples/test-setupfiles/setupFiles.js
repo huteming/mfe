@@ -1,1 +1,0 @@
-window.hello = 'hello'

@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "build": "node ../../bin/mfe.js build"
-  },
-  "dependencies": {
-    "react": "^17.0.2"
-  }
-}

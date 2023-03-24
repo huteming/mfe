@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "build": "node ../../bin/mfe.js build --clean"
-  },
-  "dependencies": {
-    "@types/ramda": "^0.28.11",
-    "ramda": "^0.28.0"
-  }
-}
