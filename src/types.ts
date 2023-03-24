@@ -11,19 +11,15 @@ export interface IConfigFileExports {
 
 export interface IGulpOptions {
   output: IGulpOutputOptions | IGulpOutputOptions[]
-}
-
-export interface IGulpOutputOptions {
-  dir: string
-  /**
-   * @default 'es'
-   */
-  format?: 'es' | 'cjs'
   /**
    * 是否清空输出目录
    * @default false
    */
   clean?: boolean
+}
+
+export interface IGulpOutputOptions {
+  dir: string
 }
 
 // ------------ rollup ------------

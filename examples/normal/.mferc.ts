@@ -9,6 +9,9 @@ export const rollup = [
         format: 'es',
       },
     ],
+    extraOptions: {
+      clean: true,
+    },
   }),
   defineCommonJSBuilds({
     input: 'src/index.ts',
@@ -18,6 +21,9 @@ export const rollup = [
         format: 'cjs',
       },
     ],
+    extraOptions: {
+      clean: true,
+    },
   }),
 ]
 
@@ -25,6 +31,7 @@ export const gulp = {
   output: {
     dir: 'dist',
   },
+  clean: true,
 }
 
 export const jest = {

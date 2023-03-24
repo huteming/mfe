@@ -1,22 +1,27 @@
 import { IGulpOptions, IGulpOutputOptions } from '../types'
 import gulpSwc from './plugins/swc'
-import gulp, { parallel } from 'gulp'
+import { safeArray } from '@/utils/helpers'
+import gulp, { parallel, series } from 'gulp'
 import gulpIf from 'gulp-if'
 import gulpIgnore from 'gulp-ignore'
 import gulpTs from 'gulp-typescript'
-import { join } from 'path'
+import { rm } from 'node:fs/promises'
+import { join, resolve } from 'node:path'
 import vinyl from 'vinyl'
 
 export default function build(
   cwd: string,
   gulpOptions: IGulpOptions | IGulpOptions[],
 ) {
-  const empty: IGulpOptions[] = []
+  const gulpOptionsArr = safeArray(gulpOptions)
 
-  const tasks = empty.concat(gulpOptions).map((option) => {
+  const compileTasks = gulpOptionsArr.map((option) => {
     return multipleOutputTask(cwd, option)
   })
-  const compiler = parallel(...tasks)
+  const compiler = series(
+    cleanTask(cwd, gulpOptionsArr),
+    parallel(...compileTasks),
+  )
 
   return new Promise((resolve, reject) => {
     compiler((err) => {
@@ -40,7 +45,7 @@ function multipleOutputTask(cwd: string, gulpOptions: IGulpOptions) {
 }
 
 function outputTask(cwd: string, outputOptions: IGulpOutputOptions) {
-  const { dir, format = 'es' } = outputOptions
+  const { dir } = outputOptions
   const dest = join(cwd, dir)
 
   const source = () => {
@@ -90,6 +95,33 @@ function outputTask(cwd: string, outputOptions: IGulpOutputOptions) {
   }
 
   return parallel(compileFiles, buildTypes)
+}
+
+function cleanTask(cwd: string, gulpOptions: IGulpOptions[]) {
+  const dirs = new Set<string>()
+
+  gulpOptions.forEach((options) => {
+    const { output, clean } = options
+
+    if (!clean) {
+      return
+    }
+
+    safeArray(output).forEach((out) => {
+      dirs.add(resolve(cwd, out.dir))
+    })
+  })
+
+  return () => {
+    return Promise.all(
+      [...dirs].map((dir) => {
+        return rm(dir, {
+          force: true,
+          recursive: true,
+        })
+      }),
+    )
+  }
 }
 
 function isTypeFile(f: vinyl) {
