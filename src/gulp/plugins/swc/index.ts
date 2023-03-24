@@ -1,5 +1,4 @@
 import swc from '@swc/core'
-import { VinylFile } from 'gulp-typescript/release/types'
 import { extname } from 'node:path'
 import { Transform } from 'node:stream'
 import PluginError from 'plugin-error'

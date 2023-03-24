@@ -1,5 +1,5 @@
-import { log } from './utils'
+import sum from './utils/sum'
 
 export default function () {
-  log('footing')
+  return sum(1, 2)
 }

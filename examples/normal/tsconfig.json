@@ -11,7 +11,7 @@
     "strict": true,
     "paths": {
       "@/*": ["src/*"],
-      "utils/*": ["utils/*"]
+      "utils/*": ["src/utils/*"]
     },
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
