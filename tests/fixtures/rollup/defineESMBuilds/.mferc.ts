@@ -1,5 +1,4 @@
-// @ts-ignore
-import { defineESMBuilds } from '../../../../dist/helpers.esm.mjs'
+import { defineESMBuilds } from '../../../../src/rollup/helpers'
 
 export const rollup = defineESMBuilds({
   input: 'src/index.ts',

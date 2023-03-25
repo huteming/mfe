@@ -1,5 +1,5 @@
 import type { IRollupOptions } from '../types'
-import logger from '@/utils/logger'
+import logger from '../utils/logger'
 import { produce } from 'immer'
 import { ModuleFormat } from 'rollup'
 

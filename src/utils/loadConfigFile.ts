@@ -25,10 +25,10 @@ export default async function loadConfigFile(
   }
   const ext = extname(normalizedFileName)
 
-  if (ext === '.ts') {
-    return loadTranspiledConfigFile(normalizedFileName)
+  if (ext === '.js') {
+    return loadJSConfigFile(normalizedFileName)
   }
-  return loadJSConfigFile(normalizedFileName)
+  return loadTranspiledConfigFile(normalizedFileName)
 }
 
 async function loadJSConfigFile(fileName: string) {

@@ -1,25 +1,11 @@
+import { run } from '../src/footing'
 import { distToMap, getDirCases } from './utils'
+import { chdir } from 'node:process'
 import path from 'path'
-import shell from 'shelljs'
 
 const CASES_DIR = path.join(__dirname, 'fixtures/rollup')
 
 const cases = getDirCases(CASES_DIR)
-
-async function run(command: string) {
-  return new Promise((resolve, reject) => {
-    shell.exec(command, { silent: true }, function (code, stdout, stderr) {
-      // console.log('Exit code:', code);
-      // console.log('Program output:', stdout);
-      // console.log('Program stderr:', stderr);
-      if (code === 1) {
-        reject(stderr)
-      } else {
-        resolve(stdout)
-      }
-    })
-  })
-}
 
 describe('rollup', () => {
   let spyLog
@@ -38,8 +24,8 @@ describe('rollup', () => {
     // }
     it(name, async () => {
       const cwd = path.join(CASES_DIR, name)
-      shell.cd(cwd)
-      await run('npm run build')
+      chdir(cwd)
+      await run(['build', '--key', name])
 
       const fileMap = distToMap(path.join(CASES_DIR, name, 'lib'))
 

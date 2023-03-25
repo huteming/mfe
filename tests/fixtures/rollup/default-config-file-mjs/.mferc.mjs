@@ -6,4 +6,7 @@ export const rollup = {
       format: 'es',
     },
   ],
+  extraOptions: {
+    clean: true,
+  },
 }
