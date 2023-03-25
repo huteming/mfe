@@ -1,6 +1,13 @@
 import { IJestOptions } from '../types'
 import { getAliasFromTsConfig } from './utils'
 import type { Config } from '@jest/types'
+import { join } from 'node:path'
+
+function resolve(target: string) {
+  // 'test' 是 jest 下的默认值
+  const base = (process.env.NODE_ENV as any) === 'test' ? '../../' : '../'
+  return require.resolve(join(base, target))
+}
 
 export default function mergeOptions(
   cwd: string,
@@ -14,12 +21,9 @@ export default function mergeOptions(
     clearMocks: true,
 
     // 启动文件
-    setupFiles: [
-      require.resolve('../static/helpers/setupFiles/shim'),
-      ...setupFiles,
-    ],
+    setupFiles: [resolve('static/helpers/setupFiles/shim'), ...setupFiles],
     // setupFilesAfterEnv: [
-    //   require.resolve('../static/helpers/setupFiles/jasmine'),
+    //   resolve('static/helpers/setupFiles/jasmine'),
     // ],
 
     // 匹配文件
@@ -32,21 +36,22 @@ export default function mergeOptions(
       ...getAliasFromTsConfig(cwd),
       // 静态资源
       // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      //   require.resolve('../static/mocks/fileMocks'),
+      //   resolve('static/mocks/fileMocks'),
       '\\.(css|less|sass|scss|stylus)$': require.resolve('identity-obj-proxy'),
       // webpack inline loader
-      '^file-loader': require.resolve('../static/mocks/fileMocks'),
+      '^file-loader': resolve('static/mocks/fileMocks'),
     },
     // Default: ["/node_modules/"]
     // testPathIgnorePatterns: ['/node_modules/'],
     transform: {
       '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest', {}],
 
-      '^.+\\.(css|less|sass|scss|stylus)$': require.resolve(
-        '../static/helpers/transformers/css',
+      '^.+\\.(css|less|sass|scss|stylus)$': resolve(
+        'static/helpers/transformers/css',
       ),
-      '^(?!.*\\.(js|jsx|ts|tsx|css|less|sass|scss|stylus|json)$)':
-        require.resolve('../static/helpers/transformers/file'),
+      '^(?!.*\\.(js|jsx|ts|tsx|css|less|sass|scss|stylus|json)$)': resolve(
+        'static/helpers/transformers/file',
+      ),
     },
     // Default: ["/node_modules/", "\\.pnp\\.[^\\\/]+$"]
     // transformIgnorePatterns: [],
