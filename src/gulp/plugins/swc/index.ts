@@ -1,4 +1,4 @@
-import swc from '@swc/core'
+import { transform as swcTransform } from '@swc/core'
 import { extname } from 'node:path'
 import { Transform } from 'node:stream'
 import PluginError from 'plugin-error'
@@ -25,14 +25,13 @@ export default function gulpSwc() {
 
       const isTypeScript = file.path.endsWith('.ts')
 
-      swc
-        .transform(file.contents!.toString(), {
-          jsc: {
-            parser: {
-              syntax: isTypeScript ? 'typescript' : 'ecmascript',
-            },
+      swcTransform(file.contents!.toString(), {
+        jsc: {
+          parser: {
+            syntax: isTypeScript ? 'typescript' : 'ecmascript',
           },
-        })
+        },
+      })
         .then((res) => {
           if (res) {
             file.contents = Buffer.from(res.code)
