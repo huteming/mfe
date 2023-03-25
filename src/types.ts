@@ -5,6 +5,7 @@ export interface IConfigFileExports {
   gulp?: IGulpOptions | IGulpOptions[]
   rollup?: IRollupOptions | IRollupOptions[]
   jest?: IJestOptions
+  jestOptions?: IJestOptions
 }
 
 // ------------ gulp ------------

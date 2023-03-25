@@ -52,10 +52,16 @@ export async function run(argv?: string[]) {
     .option('--coverage', 'jest覆盖率')
     .action(
       async (regexForTestFiles: string[], options: TestCommandOptions) => {
-        const { jest: jestOptions } = await loadConfigFile(cwd)
+        const configFileExports = await loadConfigFile(cwd)
         options._ = regexForTestFiles
 
-        await test(cwd, jestOptions, options)
+        // 测试环境下 jest 被注入到全局，配置文件声明 jest 会报错
+        // fix: SyntaxError: Identifier 'jest' has already been declared
+        await test(
+          cwd,
+          configFileExports.jest || configFileExports.jestOptions,
+          options,
+        )
       },
     )
 

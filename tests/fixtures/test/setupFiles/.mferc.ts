@@ -1,4 +1,4 @@
-export const jest = {
+export const jestOptions = {
   extraOptions: {
     setupFiles: ['./setupFiles.js'],
   },
