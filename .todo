@@ -1,0 +1,18 @@
+Projects:
+    ✔ 不再使用 babel 解析配置文件，而是将配置作为入口进行一次构建然后引入 @done(23-03-25 16:26)
+    ✔ 生成库自身的类型文件 @done(23-03-25 16:29)
+    ✔ 配置文件支持 `.mjs`、 `.js` 格式 @done(23-03-25 16:31)
+    ✔ 运行测试用例不再依赖库构建，而是直接使用源码 @done(23-03-25 16:31)
+
+
+Rollup:
+    相关链接: https://github.com/ezolenko/rollup-plugin-typescript2/issues/273
+    ✔ 编译时生成类型文件 @done(23-03-25 16:23)
+    2023-03-19: 没有相对比较简单的方案解决，暂时还是用相对路径！
+    相关链接: https://github.com/ezolenko/rollup-plugin-typescript2/issues/201
+    ✘ 解析类型模块中的别名 @cancelled(23-03-25 16:22)
+    用导出方法，而不是用入口方法区分，是因为用 format 区分有点麻烦，而且 format 是在 output 中，也没法为特定模式再添加插件了。
+    ✔ 声明 `defineESMBuilds` `defineCommonJSBuilds` `defineBrowserBuilds` ? 用来区分三种模式。 @done(23-03-25 16:23)
+    ✔ 支持构建前清空目标目录 @done(23-03-25 16:25)
+    ✔ 使用 esbuild 编译文件 @done(23-03-25 16:30)
+    ✔ 编写测试用例 @done(23-03-25 16:25)
