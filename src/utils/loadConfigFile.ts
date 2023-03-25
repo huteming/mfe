@@ -2,6 +2,7 @@
  * https://github.com/rollup/rollup/blob/f049771dd0246cdbb461c70f85868d5402b4cd44/cli/run/loadConfigFile.ts#L85
  */
 import { IConfigFileExports } from '../types'
+import json from '@rollup/plugin-json'
 import { existsSync } from 'node:fs'
 import { unlink, writeFile } from 'node:fs/promises'
 import { dirname, extname, isAbsolute, join, resolve } from 'node:path'
@@ -15,9 +16,10 @@ import typescript from 'rollup-plugin-typescript2'
  * 2. 不是 js，通过 rollup 构建后，写入本地文件然后 import
  */
 export default async function loadConfigFile(
+  cwd: string,
   fileName?: string,
 ): Promise<IConfigFileExports> {
-  const normalizedFileName = relativeFileName(fileName)
+  const normalizedFileName = relativeFileName(cwd, fileName)
   if (!normalizedFileName) {
     return {}
   }
@@ -48,12 +50,12 @@ async function loadTranspiledConfigFile(fileName: string) {
     },
     input: fileName,
     plugins: [
+      json(),
       typescript({
         clean: true,
         check: false,
       }),
     ],
-    treeshake: false,
   }
 
   const bundle = await rollup(inputOptions)
@@ -61,7 +63,7 @@ async function loadTranspiledConfigFile(fileName: string) {
     output: [{ code }],
   } = await bundle.generate({
     exports: 'named',
-    format: 'es',
+    format: 'cjs',
     plugins: [
       {
         name: 'transpile-import-meta',
@@ -77,14 +79,12 @@ async function loadTranspiledConfigFile(fileName: string) {
     ],
   })
   return loadConfigFromWrittenFile(
-    join(dirname(fileName), `rollup.config-${Date.now()}.mjs`),
+    join(dirname(fileName), `rollup.config-${Date.now()}.js`),
     code,
   )
 }
 
-function relativeFileName(fileName?: string): string | null {
-  const cwd = process.cwd()
-
+function relativeFileName(cwd: string, fileName?: string): string | null {
   if (fileName) {
     return resolve(cwd, fileName)
   }
@@ -92,9 +92,9 @@ function relativeFileName(fileName?: string): string | null {
   const name = '.mferc'
   const exts = ['.ts', '.mjs', '.js']
   for (let i = 0; i < exts.length; i++) {
-    const expectFile = name + exts[i]
-    if (existsSync(expectFile)) {
-      return resolve(cwd, expectFile)
+    const filePath = resolve(cwd, name + exts[i])
+    if (existsSync(filePath)) {
+      return filePath
     }
   }
 
@@ -107,7 +107,10 @@ async function loadConfigFromWrittenFile(
 ) {
   await writeFile(bundledFileName, bundledCode)
   try {
-    return await import(pathToFileURL(bundledFileName).href)
+    // error: segmentation fault in jest
+    // 相关链接: https://github.com/nodejs/node/issues/35889
+    // return await import(pathToFileURL(bundledFileName).href)
+    return require(bundledFileName)
   } finally {
     unlink(bundledFileName)
   }
