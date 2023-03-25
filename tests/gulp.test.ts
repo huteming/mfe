@@ -1,5 +1,6 @@
+import { run } from '../src/footing'
 import { distToMap, getDirCases } from './utils'
-import execa from 'execa'
+import { chdir } from 'node:process'
 import path from 'path'
 
 const CASES_DIR = path.join(__dirname, 'fixtures/gulp')
@@ -13,7 +14,9 @@ describe('test', () => {
     // }
     it(name, async () => {
       const cwd = path.join(CASES_DIR, name)
-      await execa('npm', ['run', 'build'], { cwd })
+
+      chdir(cwd)
+      await run(['build', '--key', name])
 
       const fileMap = distToMap(path.join(CASES_DIR, name, 'dist'))
 
