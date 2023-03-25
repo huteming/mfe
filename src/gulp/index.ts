@@ -9,10 +9,14 @@ import { rm } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import vinyl from 'vinyl'
 
-export default function build(
+export default async function build(
   cwd: string,
-  gulpOptions: IGulpOptions | IGulpOptions[],
-) {
+  gulpOptions?: IGulpOptions | IGulpOptions[],
+): Promise<any> {
+  if (!gulpOptions) {
+    return
+  }
+
   const gulpOptionsArr = safeArray(gulpOptions)
 
   const compileTasks = gulpOptionsArr.map((option) => {

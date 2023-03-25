@@ -12,16 +12,20 @@ import {
   TestCommandOptions,
 } from './types'
 import loadConfigFile from './utils/loadConfigFile'
-import { Command } from 'commander'
+import { Command, ParseOptions } from 'commander'
 import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
 const pkg = require('../package.json')
 
-export async function run() {
+/**
+ * @param argv
+ * https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md#parse-%E5%92%8C-parseasync
+ */
+export async function run(argv?: string[]) {
   const program = new Command()
   program.version(pkg.version)
-  // 根路径
+  // 根路径。自定义的话，内部其他工具（如: rollup）在解析配置的时候可能会出错，所以还是只能依赖从 process 获取
   const cwd = process.cwd()
 
   // 接口文档: https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md
@@ -33,17 +37,11 @@ export async function run() {
     .option('--config <config>', '自定义配置文件')
     .action(async (options: BuildCommandOptions) => {
       const { gulp: gulpOptions, rollup: rollupOptions } = await loadConfigFile(
+        cwd,
         options.config,
       )
 
-      // gulp 编译
-      if (gulpOptions) {
-        gulp(cwd, gulpOptions)
-      }
-      // rollup 打包
-      if (rollupOptions) {
-        rollup(cwd, rollupOptions, options)
-      }
+      await Promise.all([gulp(cwd, gulpOptions), rollup(cwd, rollupOptions)])
     })
 
   program
@@ -54,7 +52,7 @@ export async function run() {
     .option('--coverage', 'jest覆盖率')
     .action(
       async (regexForTestFiles: string[], options: TestCommandOptions) => {
-        const { jest: jestOptions } = await loadConfigFile()
+        const { jest: jestOptions } = await loadConfigFile(cwd)
         options._ = regexForTestFiles
 
         await test(cwd, jestOptions, options)
@@ -104,7 +102,10 @@ export async function run() {
       })
     })
 
-  await program.parseAsync(process.argv)
+  const args: [string[], ParseOptions | undefined] = argv
+    ? [argv, { from: 'user' }]
+    : [process.argv, undefined]
+  await program.parseAsync(...args)
 }
 
 export * from './rollup/helpers'

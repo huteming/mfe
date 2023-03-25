@@ -31,9 +31,12 @@ async function bundler(rollupOptions: RollupOptions) {
 
 export default async function build(
   cwd: string,
-  rollupOptions: IRollupOptions | IRollupOptions[],
-  options: BuildCommandOptions,
-) {
+  rollupOptions?: IRollupOptions | IRollupOptions[],
+): Promise<any> {
+  if (!rollupOptions) {
+    return
+  }
+
   const rollupInputs = Array.isArray(rollupOptions)
     ? rollupOptions
     : [rollupOptions]

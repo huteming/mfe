@@ -3,7 +3,7 @@ import { join } from 'path'
 import ts from 'typescript'
 
 export default function parseTsCompilerOptions(
-  cwd?: string,
+  cwd: string,
 ): ts.CompilerOptions | null {
   // 会自动向上查找
   // const configFileName = ts.findConfigFile(
@@ -11,7 +11,7 @@ export default function parseTsCompilerOptions(
   //   ts.sys.fileExists,
   //   'tsconfig.json',
   // )
-  const configFileName = join(cwd || process.cwd(), 'tsconfig.json')
+  const configFileName = join(cwd, 'tsconfig.json')
   if (!existsSync(configFileName)) {
     return null
   }
