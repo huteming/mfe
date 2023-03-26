@@ -1,3 +1,4 @@
+import { IGulpOutputOptions } from '../../../types'
 import { transform as swcTransform } from '@swc/core'
 import { extname, relative } from 'node:path'
 import { Transform } from 'node:stream'
@@ -10,7 +11,9 @@ function replaceExtension(fp: string) {
   return extname(fp) ? replaceExt(fp, '.js') : fp
 }
 
-export default function gulpSwc() {
+export default function gulpSwc(outputOptions: IGulpOutputOptions) {
+  const { sourcemap } = outputOptions
+
   return new Transform({
     objectMode: true,
     transform(file: vinyl, enc, cb) {
@@ -32,7 +35,7 @@ export default function gulpSwc() {
             syntax: isTypeScript ? 'typescript' : 'ecmascript',
           },
         },
-        sourceMaps: true,
+        sourceMaps: sourcemap,
       })
         .then((res) => {
           if (res) {

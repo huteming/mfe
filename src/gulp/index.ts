@@ -102,7 +102,7 @@ function outputTask(cwd: string, outputOptions: IGulpOutputOptions) {
     return source()
       .pipe(gulpIgnore.exclude((f: vinyl) => !isJSFile(f) && !isTSFile(f)))
       .pipe(gulpIf(sourcemap, sourcemaps.init()))
-      .pipe(gulpSwc())
+      .pipe(gulpSwc(outputOptions))
       .pipe(gulpIf(sourcemap, sourcemaps.write('.')))
       .pipe(gulp.dest(dest))
   }
