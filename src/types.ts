@@ -21,6 +21,11 @@ export interface IGulpOptions {
 
 export interface IGulpOutputOptions {
   dir: string
+  /**
+   * 构建产物生成 sourcemap 文件
+   * @default {false}
+   */
+  sourcemap?: boolean
 }
 
 // ------------ rollup ------------

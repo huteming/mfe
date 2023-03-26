@@ -3,6 +3,8 @@ Projects:
     ✔ 生成库自身的类型文件 @done(23-03-25 16:29)
     ✔ 配置文件支持 `.mjs`、 `.js` 格式 @done(23-03-25 16:31)
     ✔ 运行测试用例不再依赖库构建，而是直接使用源码 @done(23-03-25 16:31)
+    ☐ 本地构建、配置文件构建、rollup 使用统一配置
+    ☐ 解析 tsconfig、jsconfig 中的 paths
 
 
 Rollup:
@@ -16,3 +18,14 @@ Rollup:
     ✔ 支持构建前清空目标目录 @done(23-03-25 16:25)
     ✔ 使用 esbuild 编译文件 @done(23-03-25 16:30)
     ✔ 编写测试用例 @done(23-03-25 16:25)
+    rollup 配置 output.sourcemap 已经支持 sourcemap
+    ✘ 支持 sourcemap @cancelled(23-03-26 03:03)
+
+
+Test:
+    ☐ 默认添加 tsconfig 中的 paths
+
+
+Gulp:
+    ☐ 默认添加 tsconfig 中的 paths
+    ✔ 支持生成 sourcemap @done(23-03-26 12:10)

@@ -4,6 +4,7 @@ import { safeArray } from '@/utils/helpers'
 import gulp, { parallel, series } from 'gulp'
 import gulpIf from 'gulp-if'
 import gulpIgnore from 'gulp-ignore'
+import sourcemaps from 'gulp-sourcemaps'
 import gulpTs from 'gulp-typescript'
 import { rm } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
@@ -49,7 +50,7 @@ function multipleOutputTask(cwd: string, gulpOptions: IGulpOptions) {
 }
 
 function outputTask(cwd: string, outputOptions: IGulpOutputOptions) {
-  const { dir } = outputOptions
+  const { dir, sourcemap = false } = outputOptions
   const dest = join(cwd, dir)
 
   const source = () => {
@@ -78,27 +79,35 @@ function outputTask(cwd: string, outputOptions: IGulpOutputOptions) {
     )
   }
 
-  const buildTypes = () => {
+  // 输出非 js 文件，如: css, d.ts 等
+  const buildUnJSFile = () => {
     return source()
-      .pipe(gulpIgnore.exclude((f: vinyl) => !isTSFile(f)))
+      .pipe(gulpIgnore.exclude(isJSFile))
       .pipe(
-        gulpTs({
-          noEmit: false,
-          declaration: true,
-          emitDeclarationOnly: true,
-          isolatedModules: false,
-        }),
+        gulpIf(
+          isTSFile,
+          gulpTs({
+            noEmit: false,
+            declaration: true,
+            emitDeclarationOnly: true,
+            isolatedModules: false,
+          }),
+        ),
       )
       .pipe(gulp.dest(dest))
   }
 
-  const compileFiles = () => {
+  // 编译 js、ts 并输出
+  const buildJSFile = () => {
     return source()
-      .pipe(gulpIf((f: vinyl) => isTSFile(f) || isJSFile(f), gulpSwc()))
+      .pipe(gulpIgnore.exclude((f: vinyl) => !isJSFile(f) && !isTSFile(f)))
+      .pipe(gulpIf(sourcemap, sourcemaps.init()))
+      .pipe(gulpSwc())
+      .pipe(gulpIf(sourcemap, sourcemaps.write('.')))
       .pipe(gulp.dest(dest))
   }
 
-  return parallel(compileFiles, buildTypes)
+  return parallel(buildJSFile, buildUnJSFile)
 }
 
 function cleanTask(cwd: string, gulpOptions: IGulpOptions[]) {

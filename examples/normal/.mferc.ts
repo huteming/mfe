@@ -30,6 +30,7 @@ export const rollup = [
 export const gulp = {
   output: {
     dir: 'dist',
+    sourcemap: true,
   },
   clean: true,
 }
