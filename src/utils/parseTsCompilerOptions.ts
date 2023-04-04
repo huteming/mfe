@@ -1,36 +1,31 @@
-import { existsSync } from 'fs'
-import { join } from 'path'
+import { existsSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import ts from 'typescript'
 
 export default function parseTsCompilerOptions(
-  cwd: string,
+  fileName?: string,
 ): ts.CompilerOptions | null {
-  // 会自动向上查找
-  // const configFileName = ts.findConfigFile(
-  //   cwd,
-  //   ts.sys.fileExists,
-  //   'tsconfig.json',
-  // )
-  const configFileName = join(cwd, 'tsconfig.json')
-  if (!existsSync(configFileName)) {
+  if (!fileName) {
+    fileName = resolve(process.cwd(), 'tsconfig.json')
+  }
+
+  if (!existsSync(fileName)) {
+    console.log(`tsconfig 文件不存在: ${fileName}`)
     return null
   }
-  // console.log('configFileName', configFileName)
-  const configFile = ts.readConfigFile(configFileName, ts.sys.readFile)
+  const configFile = ts.readConfigFile(fileName, ts.sys.readFile)
 
   const compilerOptions = ts.parseJsonConfigFileContent(
-    // tsconfig.json 完整配置，包括 include 等
     configFile.config,
     ts.sys,
-    './',
+    dirname(fileName),
   )
 
-  // 错误处理，没找到官方的处理方式，暂时忽略
-  // 注意返回的是个数组。没有错误的时候，是个空数组？有待研究
-  // if (compilerOptions.errors && compilerOptions.errors.length) {
-  //   return null
-  // }
+  if (compilerOptions.errors && compilerOptions.errors.length) {
+    console.log(`tsconfig 解析异常: ${fileName}`)
+    console.log(compilerOptions.errors)
+    return null
+  }
 
-  // console.log('compilerOptions', compilerOptions)
   return compilerOptions.options
 }

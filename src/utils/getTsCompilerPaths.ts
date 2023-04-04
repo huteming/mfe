@@ -21,7 +21,7 @@ import { produce } from 'immer'
 export default function getTsCompilerPaths(
   cwd: string,
 ): Record<string, string> | null {
-  const compilerOptions = parseTsCompilerOptions(cwd)
+  const compilerOptions = parseTsCompilerOptions()
   if (!compilerOptions || !compilerOptions.paths) {
     return null
   }

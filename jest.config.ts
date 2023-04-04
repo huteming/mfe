@@ -4,7 +4,7 @@
  */
 
 export default {
-  testTimeout: 20000,
+  testTimeout: 10000,
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -152,7 +152,8 @@ export default {
   testMatch: [
     // "**/__tests__/**/*.[jt]s?(x)",
     // "**/?(*.)+(spec|test).[tj]s?(x)"
-    '<rootDir>/tests/?(*.)+(spec|test).[tj]s?(x)',
+    '<rootDir>/tests/**/?(*.)+(spec|test).[tj]s?(x)',
+    '!**/fixtures/**',
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
