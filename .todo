@@ -29,3 +29,6 @@ Test:
 Gulp:
     ☐ 默认添加 tsconfig 中的 paths
     ✔ 支持生成 sourcemap @done(23-03-26 12:10)
+
+Create:
+    ✔ 新增初始化仓库的命令 @done(23-07-24 15:31)

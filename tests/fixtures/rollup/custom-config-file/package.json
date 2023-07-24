@@ -1,5 +1,1 @@
-{
-  "scripts": {
-    "build": "node ../../../../bin/mfe.js build --config config.ts --key custom-config-file"
-  }
-}
+{}

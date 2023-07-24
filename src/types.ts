@@ -79,6 +79,8 @@ export interface IJestOptions extends Config.InitialOptions {
 
 // ------------ command ------------
 
+export interface CreateCommandOptions {}
+
 export interface BuildCommandOptions {
   config?: string
 }

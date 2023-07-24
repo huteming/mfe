@@ -1,4 +1,5 @@
 import initCodeStyle from './code-style'
+import createAction from './create'
 import gulp from './gulp'
 import mferc from './mferc'
 import release from './release'
@@ -23,12 +24,17 @@ const pkg = require('../package.json')
  * https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md#parse-%E5%92%8C-parseasync
  */
 export async function run(argv?: string[]) {
+  // 接口文档: https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md
   const program = new Command()
   program.version(pkg.version)
   // 根路径。自定义的话，内部其他工具（如: rollup）在解析配置的时候可能会出错，所以还是只能依赖从 process 获取
   const cwd = process.cwd()
 
-  // 接口文档: https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md
+  program
+    .command('create <project-name>')
+    .description('创建新仓库')
+    .action(createAction)
+
   program
     .command('build')
     .description('构建')

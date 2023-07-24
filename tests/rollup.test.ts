@@ -6,6 +6,9 @@ import path from 'path'
 const CASES_DIR = path.join(__dirname, 'fixtures/rollup')
 
 const cases = getDirCases(CASES_DIR)
+const argvMap = {
+  'custom-config-file': ['--config', 'config.ts'],
+}
 
 describe('rollup', () => {
   let spyLog
@@ -25,7 +28,7 @@ describe('rollup', () => {
     it(name, async () => {
       const cwd = path.join(CASES_DIR, name)
       chdir(cwd)
-      await run(['build', '--key', name])
+      await run(['build', '--key', name, ...(argvMap[name] || [])])
 
       const fileMap = distToMap(path.join(CASES_DIR, name, 'lib'))
 
